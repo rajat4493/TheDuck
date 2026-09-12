@@ -2,46 +2,31 @@
 
 ## Current state
 
-TheDuck Product Intent v1 is locked and committed. The repo now contains the primary JTBD, three-pack artifact model, milestone plan, self-dogfood protocol and standing coding-agent contract.
+M1 is **IN PROGRESS** on `codex/m1-intent-gate`. A runnable local vertical slice now exists. The locked authority documents are unchanged.
 
-## What is NOT built yet
+Implemented: rough idea capture → four clarification groups → editable review and opt-in suggestions → read-only Product Preview → approval checkbox plus explicit LOCK → Founder, universal AI Builder, and Professional Product Team packs. All outputs use one canonical immutable contract. Canonical JSON, a pack-file JSON bundle, individual/combined Markdown, and selectable project JSON are exposed for portability.
 
-No SaaS application exists yet.
+Implementation: Node.js 22+, no runtime dependencies. `server.mjs` serves loopback only; `src/intent.js` contains rules, preview/lock validation and renderers; `public/` contains the UI. No model, authentication, billing, GitHub connection UI, platform adapters, or downstream coding calls.
 
-No intent-gate UI exists yet.
+## Run and verify
 
-No builder adapter has been implemented yet.
+```sh
+PORT=4317 npm start
+npm test
+npm run check
+node scripts/exercise.mjs
+```
 
-No GitHub connection flow has been implemented yet.
+Open `http://127.0.0.1:4317`. Port 3000 was occupied during this session. The running process is session-local; restart if unavailable.
 
-No downstream coding platform has been invoked by TheDuck.
+Read `duck/VERIFICATION.md` for actual evidence, `duck/DECISIONS.md` for provenance, and `duck/examples/*.json` for synthetic portable examples. Test approvals are not product-owner decisions.
 
-## Exact next milestone
+## Remaining M1 work / exact next action
 
-Build **M1 — Intent Gate Vertical Slice** only.
+1. Verify canonical and pack downloads in the owner's normal browser. The in-app browser download-event waits timed out. Copyable JSON is a fallback; do not claim download delivery is verified.
+2. Have the owner exercise `duck/UAT.md`, especially whether the rule-based questions actually clarify/challenge a fuzzy idea. M1's inference requirement is not waived: this implementation uses limited keyword rules and owner-entered substance. If insufficient, improve understanding/refinement within the locked intent before calling M1 complete.
+3. Record owner feedback, address M1 gaps, and commit/push the next checkpoint with updated evidence. Do not move to M2 until human review approves it.
 
-The product must let a user:
+## Limitations
 
-1. submit a rough software idea;
-2. answer a small number of focused clarification/challenge questions;
-3. review a plain-English Product Preview;
-4. explicitly lock the product intent;
-5. generate three consistent outputs from that lock: Founder/Vibe Coder Pack, AI Builder Pack, Professional Product Team Pack.
-
-## Constraints
-
-- do not build billing;
-- do not build teams/RBAC;
-- do not build a generic project-management dashboard;
-- do not add Cursor/Lovable integration yet;
-- do not let generated packs become separate sources of truth;
-- preserve a clear boundary between pre-lock suggestions and post-lock protection;
-- every material suggestion accepted by the user must retain provenance.
-
-## Evidence expected
-
-See `duck/MILESTONES.md` M1 exit criteria.
-
-## Next action
-
-A coding agent should propose the smallest technical design for M1 and implementation plan, then build it against the locked intent without expanding scope.
+Browser storage keeps only the latest lock and a draft, not a project archive; export before replacing it. Fingerprints detect accidental drift, not malicious edits with a recomputed hash. No import or full Change Proposal flow exists. Nothing in generated packs proves a downstream product was implemented.

@@ -1,0 +1,248 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color: #173e35;
+  background: #f7f6ef;
+  line-height: 1.55;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+header {
+  padding: 24px 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #d9dfd1;
+}
+header span,
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  font-weight: 700;
+}
+.brand {
+  font-size: 25px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 800;
+}
+main {
+  max-width: 1280px;
+  margin: 56px auto;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 64px;
+  padding: 0 40px;
+}
+h1 {
+  font-size: 52px;
+  line-height: 1.07;
+  letter-spacing: -2px;
+  margin: 24px 0;
+}
+h2 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-top: 0;
+}
+h3 {
+  margin-bottom: 8px;
+}
+aside p {
+  color: #547066;
+}
+aside small {
+  display: block;
+  color: #547066;
+  font-size: 12px;
+  margin-top: 40px;
+}
+ol#progress {
+  padding-left: 23px;
+  margin-top: 36px;
+}
+#progress li {
+  padding: 8px;
+  color: #6b7d71;
+}
+#progress .active {
+  font-weight: 750;
+  color: #173e35;
+}
+.workspace {
+  min-width: 0;
+  background: white;
+  border: 1px solid #dce2d5;
+  border-radius: 18px;
+  padding: 36px;
+  box-shadow: 0 15px 50px #183d3507;
+}
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 650;
+  margin: 20px 0 6px;
+}
+textarea,
+input[type="text"] {
+  font: inherit;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #a8b8aa;
+  border-radius: 8px;
+  background: #fcfcf8;
+  color: #173e35;
+  resize: vertical;
+}
+textarea {
+  min-height: 100px;
+}
+button {
+  font: inherit;
+  font-weight: 650;
+  border: 0;
+  border-radius: 8px;
+  background: #173e35;
+  color: white;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+button.secondary {
+  background: #edf0e6;
+  color: #173e35;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+button:hover {
+  filter: brightness(1.1);
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #d3ac39;
+  outline-offset: 3px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+.hint {
+  color: #5d7267;
+  font-size: 14px;
+}
+.suggestion {
+  padding: 16px;
+  background: #f7f3df;
+  border: 1px solid #e5d997;
+  border-radius: 9px;
+  margin: 16px 0;
+}
+.suggestion label {
+  margin: 0;
+  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: #173e35;
+}
+.preview {
+  border-top: 1px solid #e0e5db;
+  margin-top: 22px;
+  padding-top: 6px;
+}
+.preview p,
+.preview li {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.tag {
+  font-size: 11px;
+  background: #edf0e6;
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+.lock-note {
+  padding: 16px;
+  background: #edf0e6;
+  border-radius: 8px;
+}
+#error {
+  padding: 14px;
+  background: #fff0e9;
+  color: #9d2e10;
+  border: 1px solid #e8b49f;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+details {
+  border: 1px solid #dce2d5;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font:
+    13px/1.6 ui-monospace,
+    monospace;
+  max-height: 450px;
+  overflow: auto;
+}
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #547066;
+  padding: 20px;
+}
+code {
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+@media (max-width: 850px) {
+  main {
+    grid-template-columns: 1fr;
+    margin-top: 28px;
+    padding: 0 20px;
+    gap: 24px;
+  }
+  h1 {
+    font-size: 40px;
+  }
+  aside small {
+    margin-top: 18px;
+  }
+  ol#progress {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    margin-top: 18px;
+  }
+  aside h1 br {
+    display: none;
+  }
+  .workspace {
+    padding: 24px;
+  }
+  header span {
+    display: none;
+  }
+}

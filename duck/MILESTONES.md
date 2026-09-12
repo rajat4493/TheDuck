@@ -17,6 +17,8 @@ Status: IN PROGRESS
 
 ## M1 — Intent Gate Vertical Slice
 
+Status: IN PROGRESS — local slice implemented; automated and browser flow evidence recorded. Download delivery and owner acceptance of clarification quality remain open. See `VERIFICATION.md`, `DECISIONS.md`, and `UAT.md`.
+
 Goal: prove the core value before building a full SaaS.
 
 A user can:
