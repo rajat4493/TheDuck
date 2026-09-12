@@ -1,3 +1,4 @@
+import { shapeExperience } from "./experience.js";
 export const HUMAN = "HUMAN";
 export const SUGGESTED = "THEDUCK-SUGGESTED + HUMAN-APPROVED";
 export const fields = {
@@ -104,6 +105,38 @@ export function understand(idea) {
   };
 }
 export function preview(draft) {
+  if (draft.experience) {
+    const shaped = shapeExperience(draft.experience);
+    if (shaped.blocking.length)
+      throw Error(`Before locking: ${shaped.blocking.join(" ")}`);
+    for (const field of [
+      "definition",
+      "targetUser",
+      "jtbd",
+      "journey",
+      "scope",
+      "acceptance",
+    ]) {
+      if (!shaped.model[field]?.length)
+        throw Error(
+          "Something important is still unclear. Please correct the shaped idea before locking.",
+        );
+    }
+    return {
+      ...shaped.model,
+      decisions: shaped.sources,
+      acceptedSuggestions: shaped.acceptedSuggestions,
+      fidelity: shaped.fidelity.filter(
+        (row) =>
+          row.status !== "THEDUCK SUGGESTION" || row.choice === "accepted",
+      ),
+      conversation: {
+        idea: draft.experience.idea,
+        answers: structuredClone(draft.experience.answers),
+        corrections: structuredClone(draft.experience.corrections),
+      },
+    };
+  }
   const result = {
     idea: clean(draft.idea),
     decisions: {},
@@ -203,13 +236,16 @@ export async function generate(envelope, overrides) {
   const { contract: c, fingerprint } = await verify(envelope);
   const section = (field) =>
     `## ${fields[field]}\n\n${Array.isArray(c[field]) ? bullets(c[field]) : c[field]}`;
-  const shared = Object.keys(fields).map(section).join("\n\n");
+  const trace = c.fidelity
+    ? `\n\n## Idea Fidelity\n${c.fidelity.map((row) => `- You said: ${row.said}\n  Placed as: ${row.placed} (${row.status})`).join("\n")}`
+    : "";
+  const shared = Object.keys(fields).map(section).join("\n\n") + trace;
   const header = `Canonical lock: ${fingerprint}\nLocked at: ${c.lockedAt}\n`;
   const provenance =
     Object.entries(c.decisions)
       .map(
         ([field, decision]) =>
-          `- ${fields[field]}: ${decision.origin}\n  Owner input: ${JSON.stringify(decision.value)}`,
+          `- ${fields[field]}: ${decision.origin}\n  ${decision.kind === "INTERPRETED" ? "Interpretation reviewed at lock" : "Owner input"}: ${JSON.stringify(decision.value)}${decision.source ? `\n  Source: ${decision.source}` : ""}`,
       )
       .join("\n") +
     "\n" +
