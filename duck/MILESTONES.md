@@ -52,6 +52,12 @@ Evidence required before M1 complete:
 - founder VAT/UAT instructions generated in plain language;
 - no unsupported claim that a downstream coding platform was actually invoked unless it was.
 
+## M1.1 — Viber Experience Correction
+
+Status: IMPLEMENTED NOT VERIFIED — conversational front door, shaped preview, fidelity review, correction paths, provenance, and M1 compatibility are implemented. Browser evidence is recorded; human review of clarity and download behavior remains required.
+
+Evidence: `duck/VERIFICATION_M1_1.md`. Exact next action: human review of the M1.1 UAT flow; do not begin M2.
+
 ## M2 — GitHub Continuity
 
 Goal: make the repository the continuity backbone when the user chooses GitHub.

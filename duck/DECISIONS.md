@@ -10,3 +10,12 @@
 - **EVIDENCE-DISCOVERED** — In-app browser download-event waits timed out, including after attaching the download anchor and extending object URL lifetime. No browser console error was observed. Download completion remains unverified; no cause is asserted.
 
 No locked authority file was changed. No suggestion made by this implementation has been accepted on behalf of the actual product owner. Example approvals are synthetic test inputs only.
+
+## M1.1 decisions
+
+- **HUMAN** — Replace the fixed PM-style questionnaire as the primary front door with conversational reflection, material questions, shaped preview, fidelity review, and correction paths, as specified in `docs/M1_1_VIBER_EXPERIENCE.md`.
+- **IMPLEMENTATION-NECESSARY** — Keep M1's canonical contract fields and lock engine unchanged. The new `src/experience.js` is a pre-lock shaping layer; `src/intent.js` still owns explicit approval, deep immutability, fingerprint verification, and pack generation.
+- **IMPLEMENTATION-NECESSARY** — Use transparent, deterministic language rules for this local slice. Unrecognized ideas remain unresolved and cannot lock until the user supplies or accounts for missing material decisions.
+- **IMPLEMENTATION-NECESSARY** — Store the conversational draft separately from the locked contract so correction and reload preserve the pre-lock decision history without changing the lock model.
+- **EVIDENCE-DISCOVERED** — Browser review exposed that a correction must replace the selected field rather than also leak into scope. Corrections now carry a selected field and are recorded in fidelity/provenance.
+- **OPEN QUESTION** — No permanent Ducklings visual reference was supplied. Styling tokens are centralized and explicitly temporary.

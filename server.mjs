@@ -4,6 +4,7 @@ const routes = {
   "/": ["public/index.html", "text/html"],
   "/app.js": ["public/app.js", "text/javascript"],
   "/style.css": ["public/style.css", "text/css"],
+  "/experience.js": ["src/experience.js", "text/javascript"],
   "/intent.js": ["src/intent.js", "text/javascript"],
 };
 const server = http.createServer(async (req, res) => {

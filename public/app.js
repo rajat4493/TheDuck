@@ -1,16 +1,15 @@
+import { lock, verify, generate } from "/intent.js";
 import {
-  understand,
-  preview,
-  lock,
-  verify,
-  generate,
-  fields,
-} from "/intent.js";
+  createExperience,
+  shapeExperience,
+  answerExperience,
+  chooseSuggestion,
+  correctExperience,
+  accountStatement,
+} from "/experience.js";
 const app = document.querySelector("#app");
 const error = document.querySelector("#error");
-let draft,
-  envelope,
-  step = 0;
+let conversation, envelope;
 const el = (tag, text, cls) => {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -25,9 +24,11 @@ function report(e) {
 function stage(n) {
   app.replaceChildren();
   error.hidden = true;
-  document
-    .querySelectorAll("#progress li")
-    .forEach((li, i) => li.classList.toggle("active", i === n));
+  document.querySelectorAll("#progress li").forEach((li, i) => {
+    li.classList.toggle("active", i === n);
+    if (i === n) li.setAttribute("aria-current", "step");
+    else li.removeAttribute("aria-current");
+  });
 }
 function button(text, action, secondary = false) {
   const b = el("button", text, secondary ? "secondary" : "");
@@ -56,23 +57,24 @@ function title(text, hint) {
   if (hint) app.append(el("p", hint, "hint"));
   heading.focus();
 }
-function input(field, value, caption = fields[field]) {
+function input(id, caption, value = "") {
   const label = el("label", caption);
-  label.htmlFor = field;
+  label.htmlFor = id;
   const box = el("textarea");
-  box.id = field;
-  box.value = Array.isArray(value) ? value.join("\n") : value || "";
+  box.id = id;
+  box.value = value;
   box.maxLength = 5000;
   app.append(label, box);
   return box;
 }
-function saveDraft() {
+function save() {
   try {
-    localStorage.setItem("theduck-draft", JSON.stringify(draft));
+    localStorage.setItem("theduck-conversation", JSON.stringify(conversation));
+    localStorage.setItem("theduck-conversation-active", "true");
   } catch {
     report(
       Error(
-        "Browser storage is unavailable. You can continue, but download your files before closing.",
+        "Your browser cannot save this draft. Keep this tab open and copy your final files before closing.",
       ),
     );
   }
@@ -81,159 +83,320 @@ function start() {
   stage(0);
   title(
     "What do you want to build?",
-    "A few messy sentences are enough to start. We’ll make the important parts clear together.",
+    "Tell me like you’d tell a friend. A messy idea is a perfectly good start.",
   );
-  const idea = input("idea", draft?.idea || "", "Your rough idea");
-  idea.placeholder = "I want an app that helps…";
+  const idea = input("idea", "Your idea", conversation?.idea || "");
+  idea.rows = 7;
+  idea.placeholder =
+    "I want to take a photo of an antique and find out if it’s valuable — and why…";
   actions(
-    button("Let’s make it clear →", () => {
-      if (!draft || draft.idea !== idea.value.trim())
-        draft = understand(idea.value);
-      step = 0;
-      saveDraft();
-      questions();
-    }),
-  );
-}
-function questions() {
-  stage(1);
-  const q = draft.questions[step];
-  title(
-    q.title,
-    `Question ${step + 1} of ${draft.questions.length}. ${q.hint}`,
-  );
-  const boxes = q.fields.map((field) => [field, input(field, draft[field])]);
-  const save = () => {
-    for (const [field, box] of boxes) draft[field] = box.value;
-    saveDraft();
-  };
-  actions(
-    button(
-      "Back",
-      () => {
-        save();
-        if (step) {
-          step--;
-          questions();
-        } else start();
-      },
-      true,
-    ),
-    button(step === 3 ? "Review my product →" : "Next →", () => {
+    button("Make sense of my idea →", () => {
+      if (!conversation || conversation.idea !== idea.value.trim())
+        conversation = createExperience(idea.value);
       save();
-      if (step === 3) review();
-      else {
-        step++;
-        questions();
-      }
+      heard();
     }),
   );
-}
-function review() {
-  stage(2);
-  title(
-    "Does this describe your product?",
-    "Edit anything below. Nothing is locked yet. Lists use one item per line.",
-  );
-  const boxes = Object.keys(fields).map((field) => [
-    field,
-    input(field, draft[field]),
-  ]);
-  app.append(el("h3", "A small challenge before you lock"));
-  for (const suggestion of draft.suggestions) {
-    const card = el("div", undefined, "suggestion");
-    const label = el("label");
-    const check = document.createElement("input");
-    check.type = "checkbox";
-    check.checked = draft.accepted.includes(suggestion.id);
-    check.onchange = () => {
-      draft.accepted = draft.accepted.filter((id) => id !== suggestion.id);
-      if (check.checked) draft.accepted.push(suggestion.id);
-      saveDraft();
-    };
-    label.append(
-      check,
-      el("span", `${suggestion.reason}\nIf accepted: ${suggestion.value}`),
-    );
-    card.append(label);
-    app.append(card);
-  }
-  const save = () => {
-    for (const [field, box] of boxes) draft[field] = box.value;
-    saveDraft();
-  };
-  actions(
-    button(
-      "Back to questions",
-      () => {
-        save();
-        questions();
-      },
-      true,
-    ),
-    button("Show final preview →", () => {
-      save();
-      showPreview(preview(draft));
-    }),
-  );
-}
-function showPreview(p) {
-  stage(2);
-  title(
-    "Your Product Preview",
-    "Read this as the owner. The three packs will describe this exact product.",
-  );
-  for (const field of Object.keys(fields)) {
-    const block = el("div", undefined, "preview");
-    block.append(el("h3", fields[field]));
-    const values = Array.isArray(p[field]) ? p[field] : [p[field]];
-    if (!values.length)
-      block.append(el("p", "OPEN QUESTION — None specified."));
-    for (const value of values) {
-      const origin = p.acceptedSuggestions.some(
-        (s) => s.field === field && s.value === value,
-      )
-        ? "THEDUCK-SUGGESTED + HUMAN-APPROVED"
-        : "HUMAN";
-      block.append(el("p", value), el("span", origin, "tag"));
-    }
-    app.append(block);
-  }
   app.append(
     el(
       "p",
-      "Locking protects this definition from changes during pack generation. To change it later, start a new draft and explicitly approve a new lock.",
-      "lock-note",
+      "Local preview · Your words stay in this browser. Language rules help shape familiar ideas; anything unclear stays visible for you to correct.",
+      "hint privacy",
     ),
   );
-  const approval = el("label");
-  const check = document.createElement("input");
-  check.type = "checkbox";
-  approval.append(
-    check,
-    document.createTextNode(
-      " I approve this Product Preview and want to LOCK it.",
-    ),
+  if (envelope) actions(button("Return to my saved lock", showPacks, true));
+}
+function block(label, value, cls = "") {
+  if (!value?.length) return;
+  const card = el("section", undefined, `product-part ${cls}`);
+  card.append(el("h3", label));
+  if (Array.isArray(value)) {
+    const list = el("ul");
+    for (const item of value) list.append(el("li", item));
+    card.append(list);
+  } else card.append(el("p", value));
+  app.append(card);
+}
+function heard() {
+  const shaped = shapeExperience(conversation);
+  stage(1);
+  title(
+    "Here’s what I heard",
+    "This is my interpretation, not a decision made for you.",
   );
-  app.append(approval);
-  const confirm = button("Approve & LOCK intent", async () => {
-    envelope = await lock(draft, check.checked);
-    try {
-      localStorage.setItem("theduck-lock", JSON.stringify(envelope));
-    } catch {
-      await showPacks();
-      report(
-        Error(
-          "Lock created, but browser storage is unavailable. Download the canonical lock now.",
+  block("What you’re building", shaped.model.definition);
+  block(
+    "Who I think it’s for",
+    shaped.model.targetUser || "I’m not sure who would use this yet.",
+  );
+  block(
+    "What it helps them do",
+    shaped.model.jtbd ||
+      "I need a concrete example to understand the main result.",
+  );
+  block("The experience", shaped.model.journey.join(" → "), "journey");
+  const pending = shaped.questions.filter((q) => !q.answer);
+  if (pending.length)
+    block(
+      "One thing to make clear",
+      pending.map((q) => q.title),
+    );
+  actions(
+    button(
+      pending.length
+        ? "Yes — let’s make that clear →"
+        : "Yes — shape my idea →",
+      nextQuestion,
+    ),
+    button("You misunderstood me", () => correction("misunderstood"), true),
+  );
+}
+function nextQuestion() {
+  const shaped = shapeExperience(conversation);
+  const q = shaped.questions.find((q) => !q.answer);
+  if (!q) {
+    shapedIdea();
+    return;
+  }
+  stage(1);
+  title(q.title, q.why);
+  if (q.options.length) {
+    for (const option of q.options) {
+      const b = button(
+        option.label,
+        () => {
+          conversation = answerExperience(conversation, q.id, option.id);
+          save();
+          nextQuestion();
+        },
+        true,
+      );
+      b.classList.add("choice");
+      app.append(b);
+    }
+  } else {
+    const answer = input("answer", "In your own words");
+    actions(
+      button("That’s what I mean →", () => {
+        if (!answer.value.trim())
+          throw Error("Tell me a little more so I don’t have to guess.");
+        conversation = answerExperience(
+          conversation,
+          q.id,
+          answer.value.trim(),
+        );
+        save();
+        nextQuestion();
+      }),
+    );
+  }
+  actions(button("Back to what you heard", heard, true));
+}
+function correction(mode) {
+  stage(2);
+  title(
+    mode === "misunderstood"
+      ? "Let’s get your idea right"
+      : "What should change?",
+    "Your earlier choices and suggestions stay saved. Correct just the part that needs it, then review the whole idea again.",
+  );
+  const label = el("label", "Which part did I get wrong?");
+  label.htmlFor = "correction-part";
+  const select = el("select");
+  select.id = "correction-part";
+  for (const [value, text] of Object.entries({
+    definition: "What you’re building",
+    targetUser: "Who it’s for",
+    jtbd: "What it helps them do",
+    journey: "The core experience",
+    scope: "What matters in the first version",
+  })) {
+    const option = el("option", text);
+    option.value = value;
+    select.append(option);
+  }
+  app.append(label, select);
+  const words = input("correction", "Tell me how it should read");
+  actions(
+    button("Update my idea →", () => {
+      conversation = correctExperience(conversation, words.value, select.value);
+      save();
+      shapedIdea();
+    }),
+    button("Keep my current version", shapedIdea, true),
+  );
+}
+function shapedIdea() {
+  const shaped = shapeExperience(conversation);
+  stage(2);
+  title(
+    "Your idea, shaped",
+    "Your words, made clearer. Check my interpretation and keep only the suggestions you want.",
+  );
+  block("What you’re building", shaped.model.definition);
+  block("Who it’s for", shaped.model.targetUser);
+  block("What it helps them do", shaped.model.jtbd);
+  block("The core experience", shaped.model.journey.join(" → "), "journey");
+  const acceptedValues = shaped.acceptedSuggestions.map((s) => s.value);
+  block(
+    "What matters in the first version",
+    shaped.model.scope.filter((s) => !acceptedValues.includes(s)),
+  );
+  block(
+    "Keep these promises",
+    shaped.model.constraints.filter((s) => !acceptedValues.includes(s)),
+  );
+  block("Not part of this idea", shaped.model.nonGoals);
+  block(
+    "You’ll know it’s ready when",
+    shaped.model.acceptance.filter((s) => !acceptedValues.includes(s)),
+  );
+  block("Still unresolved", shaped.model.assumptions);
+  const decisions = shaped.questions.filter((q) => q.answer);
+  if (decisions.length) {
+    app.append(el("h3", "Your choices so far"));
+    for (const q of decisions) {
+      const row = el("div", undefined, "decision");
+      row.append(
+        el(
+          "p",
+          `${q.title} ${q.options.find((o) => o.id === q.answer)?.label || q.answer}`,
+        ),
+        button(
+          "Change this choice",
+          () => {
+            conversation = answerExperience(conversation, q.id, null);
+            save();
+            nextQuestion();
+          },
+          true,
         ),
       );
-      return;
+      app.append(row);
+    }
+  }
+  app.append(el("h3", "What TheDuck suggested"));
+  if (!shaped.proposals.length)
+    app.append(el("p", "No extra suggestions for this idea."));
+  for (const s of shaped.proposals) {
+    const card = el("section", undefined, "suggestion");
+    card.append(
+      el("span", "THEDUCK SUGGESTION", "tag"),
+      el("h4", s.title),
+      el("p", s.value),
+      el("p", s.why, "hint"),
+    );
+    const row = el("div", undefined, "actions");
+    for (const [choice, label] of [
+      ["accepted", "Accept"],
+      ["rejected", "Reject"],
+    ]) {
+      const b = button(
+        label,
+        () => {
+          conversation = chooseSuggestion(conversation, s.id, choice);
+          save();
+          shapedIdea();
+        },
+        choice !== s.choice,
+      );
+      b.setAttribute("aria-pressed", String(choice === s.choice));
+      row.append(b);
+    }
+    card.append(
+      row,
+      el(
+        "p",
+        s.choice === "accepted"
+          ? "Accepted — this will be part of your lock."
+          : s.choice === "rejected"
+            ? "Rejected — this will not enter your lock or packs."
+            : "Optional. It stays out unless you accept it.",
+        "hint",
+      ),
+    );
+    app.append(card);
+  }
+  app.append(
+    el("h3", "Idea Fidelity"),
+    el("p", "MY IDEA → INTERPRETATION → SUGGESTIONS → LOCK", "eyebrow"),
+    el(
+      "p",
+      "Check every part of your original idea. Nothing gets a pretend score. If a detail is missing, correct it before marking it captured.",
+      "hint",
+    ),
+  );
+  for (const row of shaped.fidelity) {
+    const card = el("section", undefined, "fidelity-row");
+    card.append(
+      el("span", row.status, "tag"),
+      el(
+        "h4",
+        row.said === "—" ? "TheDuck proposed" : `You said: “${row.said}”`,
+      ),
+      el("p", row.placed),
+    );
+    if (row.choice) card.append(el("p", row.choice, "hint"));
+    if (row.id !== undefined && row.status === "UNRESOLVED")
+      card.append(
+        button(
+          "This is captured in my shaped idea",
+          () => {
+            conversation = accountStatement(conversation, row.id);
+            save();
+            shapedIdea();
+          },
+          true,
+        ),
+      );
+    app.append(card);
+  }
+  const pending = shaped.questions.filter((q) => !q.answer);
+  if (pending.length) {
+    block(
+      "Before you lock",
+      pending.map((q) => q.title),
+    );
+    actions(button("Answer the open decision", nextQuestion));
+  }
+  if (shaped.blocking.length)
+    app.append(
+      el(
+        "p",
+        "Before locking, resolve the open decisions and check each original statement above.",
+        "lock-note",
+      ),
+    );
+  app.append(
+    el(
+      "p",
+      "Locking means you approve this interpretation and the suggestions you accepted. The three packs will describe this exact product.",
+      "hint",
+    ),
+  );
+  const yes = button("Yes, lock it", async () => {
+    envelope = await lock({ experience: conversation }, true);
+    let storageError = false;
+    try {
+      localStorage.setItem("theduck-lock", JSON.stringify(envelope));
+      localStorage.setItem("theduck-conversation-active", "false");
+    } catch {
+      storageError = true;
     }
     await showPacks();
+    if (storageError)
+      report(
+        Error(
+          "Your intent is locked in this tab, but the browser could not save it. Copy or download it before closing.",
+        ),
+      );
   });
-  confirm.disabled = true;
-  check.onchange = () => (confirm.disabled = !check.checked);
-  actions(button("Keep editing", review, true), confirm);
+  yes.disabled = shaped.blocking.length > 0;
+  actions(
+    yes,
+    button("Almost — change something", () => correction("almost"), true),
+    button("You misunderstood me", () => correction("misunderstood"), true),
+  );
 }
 function download(name, content, type = "text/markdown") {
   const url = URL.createObjectURL(new Blob([content], { type }));
@@ -249,7 +412,7 @@ async function showPacks() {
   const bundle = await generate(envelope);
   stage(3);
   title(
-    "One product. Three ways forward.",
+    "Your product intent is locked.",
     "Your intent is locked. All three packs are views of the same approved contract.",
   );
   app.append(
@@ -281,15 +444,32 @@ async function showPacks() {
   );
   const portable = el("details");
   portable.append(el("summary", "Copy your lock and packs as text"));
-  portable.append(el("p", "If downloads are unavailable, select this text and copy it into a file named theduck-project.json. It contains the original lock and every pack file.", "hint"));
+  portable.append(
+    el(
+      "p",
+      "If downloads are unavailable, select this text and copy it into a file named theduck-project.json. It contains the original lock and every pack file.",
+      "hint",
+    ),
+  );
   const exportLabel = el("label", "Portable project JSON");
   exportLabel.htmlFor = "portable-json";
   const exportText = el("textarea");
   exportText.id = "portable-json";
   exportText.readOnly = true;
   exportText.rows = 8;
-  exportText.value = JSON.stringify({envelope, bundle}, null, 2);
-  portable.append(exportLabel, exportText, button("Select all project text", () => {exportText.focus(); exportText.select();}, true));
+  exportText.value = JSON.stringify({ envelope, bundle }, null, 2);
+  portable.append(
+    exportLabel,
+    exportText,
+    button(
+      "Select all project text",
+      () => {
+        exportText.focus();
+        exportText.select();
+      },
+      true,
+    ),
+  );
   app.append(portable);
   for (const [audience, pack] of Object.entries(bundle.packs)) {
     const detail = el("details");
@@ -324,7 +504,7 @@ async function showPacks() {
     button(
       "Start a separate idea",
       () => {
-        draft = undefined;
+        conversation = undefined;
         start();
       },
       true,
@@ -332,23 +512,18 @@ async function showPacks() {
   );
 }
 try {
-  const saved = localStorage.getItem("theduck-lock");
-  if (saved) {
-    envelope = await verify(JSON.parse(saved));
-    await showPacks();
-  } else {
-    const savedDraft = localStorage.getItem("theduck-draft");
-    if (savedDraft) {
-      const parsed = JSON.parse(savedDraft);
-      draft = {
-        ...parsed,
-        questions: understand(parsed.idea).questions,
-        suggestions: understand(parsed.idea).suggestions,
-      };
-    }
-    start();
+  const savedConversation = localStorage.getItem("theduck-conversation");
+  if (savedConversation) {
+    conversation = JSON.parse(savedConversation);
+    shapeExperience(conversation);
   }
+  const saved = localStorage.getItem("theduck-lock");
+  if (saved) envelope = await verify(JSON.parse(saved));
+  if (conversation && (!envelope || envelope.contract.idea !== conversation.idea || localStorage.getItem("theduck-conversation-active") === "true")) heard();
+  else if (envelope) await showPacks();
+  else start();
 } catch (e) {
+  conversation = undefined;
   start();
   report(e);
 }
