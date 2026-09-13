@@ -1,21 +1,35 @@
-/* Temporary neutral Ducklings placeholder. Retheme here when the owner supplies a reference. */
+/* TheDuck Design System v1. Brand values live here; duck.svg is the single original mark. */
 :root {
-  --page: #f5f4f0;
-  --surface: #fff;
-  --ink: #292b2b;
-  --muted: #656762;
-  --line: #dbdcd5;
-  --soft: #eeefea;
-  --accent: #383f3b;
-  --on-accent: #fff;
-  --suggestion: #f4f1e9;
-  --focus: #806933;
-  --error: #9e332a;
-  --error-bg: #fff1ed;
-  --radius: 16px;
-  --small-radius: 8px;
+  --duck-yellow: #ffc629;
+  --ink: #0f172a;
+  --cream: #faf7f0;
+  --surface: #ffffff;
+  --mist-blue: #c9d8e6;
+  --sage: #d7e6dc;
+  --slate: #64748b;
+  --suggestion: #ffe7a3;
+  --danger-soft: #f5d2cc;
+  --page: var(--cream);
+  --muted: #475569;
+  --line: #cbd5e1;
+  --control-line: #64748b;
+  --soft: #f1f5f9;
+  --accent: var(--duck-yellow);
+  --on-accent: var(--ink);
+  --focus: var(--ink);
+  --error: #7f1d1d;
+  --error-bg: var(--danger-soft);
+  --radius: 14px;
+  --small-radius: 10px;
+  --display: 56px;
+  --h1: 40px;
+  --h2: 30px;
+  --h3: 22px;
+  --body: 16px;
+  --caption: 14px;
   --space: 24px;
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--body);
   color: var(--ink);
   background: var(--page);
   line-height: 1.6;
@@ -74,7 +88,7 @@ aside .eyebrow {
 #progress .active {
   font-weight: 700;
   color: var(--ink);
-  border-color: var(--ink);
+  border-color: var(--duck-yellow);
 }
 .workspace {
   background: var(--surface);
@@ -84,7 +98,7 @@ aside .eyebrow {
   min-width: 0;
 }
 h2 {
-  font-size: 36px;
+  font-size: var(--h1);
   letter-spacing: -1px;
   line-height: 1.2;
   margin: 0 0 16px;
@@ -93,7 +107,7 @@ h2:focus {
   outline: none;
 }
 h3 {
-  font-size: 18px;
+  font-size: var(--h3);
   margin: 28px 0 8px;
 }
 h4 {
@@ -123,6 +137,7 @@ select {
   border: 1px solid var(--line);
   padding: 14px;
   border-radius: var(--small-radius);
+  border-color: var(--control-line);
 }
 textarea {
   resize: vertical;
@@ -189,7 +204,7 @@ summary:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 .product-part h3 {
-  font-size: 12px;
+  font-size: var(--caption);
   letter-spacing: 0.4px;
   color: var(--muted);
 }
@@ -225,7 +240,7 @@ li {
 }
 .tag {
   display: inline-block;
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 0.8px;
   font-weight: 750;
   padding: 3px 7px;
@@ -307,5 +322,350 @@ footer {
   .suggestion,
   .fidelity-row {
     padding: 16px;
+  }
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/inter-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/inter-700.woff2") format("woff2");
+}
+.rail {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 232px;
+  padding: 32px 24px;
+  background: var(--ink);
+  color: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  border: 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--surface);
+  font-size: 24px;
+  font-weight: 700;
+}
+.duck-mark {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: var(--duck-yellow);
+  mask: url("/duck.svg") center/contain no-repeat;
+}
+.rail nav {
+  display: grid;
+  gap: 8px;
+  margin-top: 48px;
+}
+.rail nav button {
+  text-align: left;
+  border-color: var(--slate);
+  background: var(--ink);
+  color: var(--surface);
+}
+.rail nav button:hover {
+  background: var(--muted);
+}
+.rail nav button[hidden] {
+  display: none;
+}
+.rail .brand-note {
+  margin-top: auto;
+  padding-top: 40px;
+}
+.brand-note p {
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.brand-note span {
+  color: var(--mist-blue);
+  font-size: 13px;
+  letter-spacing: 0;
+}
+main {
+  max-width: 1100px;
+  padding: 0 48px;
+  margin: 48px auto 0;
+  padding-left: 280px;
+  box-sizing: content-box;
+}
+main > aside {
+  margin-bottom: 24px;
+}
+main > aside .eyebrow {
+  text-align: left;
+}
+.workspace {
+  padding: 40px 48px;
+}
+footer {
+  margin-left: 232px;
+}
+body[data-step="0"] .workspace h2 {
+  font-size: var(--display);
+  max-width: 640px;
+  letter-spacing: -2px;
+}
+body[data-step="1"] .workspace {
+  border-top: 4px solid var(--mist-blue);
+}
+body[data-step="3"] .workspace {
+  border-top: 4px solid var(--sage);
+}
+body[data-step="3"] .workspace h2::before {
+  content: "✓";
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+  text-align: center;
+  line-height: 48px;
+  font-size: 28px;
+  background: var(--sage);
+  border-radius: 50%;
+}
+button {
+  border-color: var(--ink);
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+button.secondary {
+  border-color: var(--control-line);
+}
+button:disabled {
+  opacity: 1;
+  color: var(--muted);
+  background: var(--soft);
+  border-color: var(--line);
+}
+.original-idea {
+  background: var(--cream);
+}
+blockquote {
+  margin: 16px 0 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--control-line);
+  overflow-wrap: anywhere;
+}
+.journey {
+  background: var(--mist-blue);
+  padding: 8px 24px 16px;
+}
+.suggestion {
+  background: var(--suggestion);
+  border-color: var(--control-line);
+  padding: 24px;
+}
+.suggestion .tag {
+  background: transparent;
+  padding-left: 0;
+}
+.fidelity-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 8px 24px;
+  padding: 24px;
+}
+.fidelity-row .status {
+  grid-column: 1/-1;
+  justify-self: start;
+}
+.fidelity-row h4 {
+  margin: 8px 0;
+  font-weight: 600;
+}
+.fidelity-row .understood {
+  margin: 8px 0;
+}
+.fidelity-row button {
+  grid-column: 1/-1;
+  justify-self: start;
+}
+.fidelity-row[data-status="PRESERVED"] .status {
+  background: var(--sage);
+}
+.fidelity-row[data-status="INTERPRETED"] .status {
+  background: var(--mist-blue);
+}
+.fidelity-row[data-status="THEDUCK SUGGESTION"] .status {
+  background: var(--suggestion);
+}
+.fidelity-row[data-status="UNRESOLVED"] .status {
+  background: var(--danger-soft);
+}
+.lock-heading {
+  border-top: 2px solid var(--ink);
+  padding-top: 32px;
+  margin-top: 40px;
+}
+.lock-action {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px 24px;
+}
+.sample-banner {
+  background: var(--mist-blue);
+  border: 1px solid var(--control-line);
+  border-radius: var(--small-radius);
+  padding: 16px;
+  font-size: 14px;
+}
+.sample-banner + button {
+  margin-bottom: 24px;
+}
+summary {
+  min-height: 44px;
+  display: list-item;
+  align-content: center;
+}
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  transform: translateY(-160%);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 12px;
+}
+.skip-link:focus {
+  transform: none;
+}
+a:focus-visible,
+.rail button:focus-visible {
+  outline: 3px solid var(--duck-yellow);
+  outline-offset: 4px;
+}
+@media (max-width: 1100px) {
+  main {
+    padding-left: 256px;
+    padding-right: 24px;
+  }
+  .workspace {
+    padding: 32px;
+  }
+}
+@media (max-width: 900px) {
+  .rail {
+    position: static;
+    width: auto;
+    padding: 16px 24px;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    justify-content: space-between;
+  }
+  .rail nav {
+    display: flex;
+    gap: 8px;
+    margin: 0;
+  }
+  .rail .brand-note {
+    display: none;
+  }
+  main {
+    padding: 0 24px;
+    margin-top: 32px;
+    box-sizing: border-box;
+  }
+  footer {
+    margin: 0;
+  }
+  .rail nav button {
+    font-size: 13px;
+  }
+}
+@media (max-width: 600px) {
+  .rail {
+    padding: 16px;
+    gap: 8px;
+  }
+  .rail .brand {
+    font-size: 20px;
+    gap: 8px;
+  }
+  .duck-mark {
+    width: 24px;
+    height: 24px;
+  }
+  .rail nav button {
+    padding: 8px;
+    min-height: 44px;
+  }
+  main {
+    padding: 0 16px;
+    margin-top: 24px;
+  }
+  .workspace {
+    padding: 24px 16px;
+  }
+  body[data-step="0"] .workspace h2 {
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+  h2 {
+    font-size: 30px;
+  }
+  #progress {
+    font-size: 13px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+  }
+  .fidelity-row {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  .fidelity-row .status,
+  .fidelity-row button {
+    grid-column: auto;
+  }
+  .suggestion {
+    padding: 16px;
+  }
+  .actions {
+    gap: 8px;
+  }
+  .actions > button {
+    min-height: 48px;
+  }
+  textarea {
+    min-width: 0;
+  }
+  pre {
+    max-width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }

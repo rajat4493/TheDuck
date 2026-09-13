@@ -11,6 +11,14 @@
 
 No locked authority file was changed. No suggestion made by this implementation has been accepted on behalf of the actual product owner. Example approvals are synthetic test inputs only.
 
+## M1.2 decisions
+
+- **HUMAN** — Implement general understanding and the supplied TheDuck Design System v1, preserve the locked engine/provenance and stop before M2.
+- **IMPLEMENTATION-NECESSARY** — Replaceable server-side provider, strict schema/source validation, bounded cache, one optional refresh and deterministic human-decision reapplication. No default model or automatic fallback.
+- **IMPLEMENTATION-NECESSARY** — Legacy rules serve compatibility only; new ideas use version-2 semantic interpretation. Explicit samples cannot replace persisted personal projects.
+- **IMPLEMENTATION-NECESSARY** — Original canonical SVG and OFL Inter with approved centralized colours; this supersedes the previous temporary-design open question.
+- **EVIDENCE-DISCOVERED** — Live credentials/model unavailable. Zero live calls; generalization and human WOW acceptance remain unverified.
+
 ## M1.1 decisions
 
 - **HUMAN** — Replace the fixed PM-style questionnaire as the primary front door with conversational reflection, material questions, shaped preview, fidelity review, and correction paths, as specified in `docs/M1_1_VIBER_EXPERIENCE.md`.

@@ -33,7 +33,13 @@ GitHub continuity and builder-specific adapters follow after that core is proven
 
 The user remains the product owner. AI may suggest, but material changes to locked intent require explicit human approval.
 
-## Run the M1 local slice
+## Run the current M1.2 experience
+
+Requires Node.js 22+. Copy .env.example to .env.local and configure server-only OPENAI_API_KEY and OPENAI_MODEL for general understanding. Run `PORT=4319 npm start` and open http://127.0.0.1:4319. Without credentials, the UI clearly reports the missing provider and offers an explicitly labelled hand-authored sample.
+
+The model interprets before lock; human decisions and the deterministic canonical engine remain authoritative. Run `npm test`, `npm run check` and `npm run verify:live`. See duck/VERIFICATION_M1_2.md and duck/UAT_M1_2.md. Live semantic quality and three-reviewer acceptance remain unverified. Do not start M2.
+
+## Historical M1 local slice
 
 Requires Node.js 22 or newer. No packages, API keys, or accounts are needed.
 

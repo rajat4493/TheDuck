@@ -58,6 +58,10 @@ Status: IMPLEMENTED NOT VERIFIED — conversational front door, shaped preview, 
 
 Evidence: `duck/VERIFICATION_M1_1.md`. Exact next action: human review of the M1.1 UAT flow; do not begin M2.
 
+## M1.2 — General Understanding and Design System
+
+Status: IMPLEMENTED NOT VERIFIED — current milestone. Provider-backed interpretation and design system implemented; deterministic lock engine preserved. Separate evidence: VERIFICATION_M1_2.md. Live calls: zero; model configuration unavailable. Twelve live cases and three human reviewers remain required. Exact next action: UAT_M1_2.md. Stop for human UAT; do not start M2.
+
 ## M2 — GitHub Continuity
 
 Goal: make the repository the continuity backbone when the user chooses GitHub.

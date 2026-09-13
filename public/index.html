@@ -3,17 +3,29 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>TheDuck — Your idea, clearly yours</title>
+    <title>TheDuck — Think it out</title>
+    <link rel="icon" href="/duck.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/style.css" />
     <script type="module" src="/app.js"></script>
   </head>
   <body>
-    <header>
-      <a href="/" class="brand">◒ TheDuck</a><span>INTENT GATE / M1.1</span>
+    <a class="skip-link" href="#app">Skip to your idea</a>
+    <header class="rail">
+      <a href="/" class="brand"
+        ><span class="duck-mark" aria-hidden="true"></span>TheDuck</a
+      >
+      <nav aria-label="Your workspace">
+        <button id="new-idea" type="button">+ New idea</button
+        ><button id="saved-packs" type="button" hidden>Saved packs</button>
+      </nav>
+      <div class="brand-note">
+        <p>Think it out<br />with TheDuck.</p>
+        <span>Clarify before you code.</span>
+      </div>
     </header>
     <main>
       <aside>
-        <p class="eyebrow">A LITTLE CLARITY BEFORE YOU BUILD</p>
+        <p class="eyebrow">YOUR IDEA, TAKEN SERIOUSLY.</p>
         <ol id="progress">
           <li>My idea</li>
           <li>What you heard</li>
@@ -23,9 +35,9 @@
       </aside>
       <section class="workspace">
         <div id="error" role="alert" hidden></div>
-        <div id="app"></div>
+        <div id="app" tabindex="-1"></div>
       </section>
     </main>
-    <footer>Challenge before lock. Protect after lock.</footer>
+    <footer>A calmer start. A brighter build.</footer>
   </body>
 </html>

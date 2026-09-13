@@ -1,15 +1,20 @@
 import { lock, verify, generate } from "/intent.js";
 import {
-  createExperience,
   shapeExperience,
   answerExperience,
   chooseSuggestion,
   correctExperience,
   accountStatement,
 } from "/experience.js";
+import {
+  createSemanticExperience as createExperience,
+  acceptInterpretation,
+} from "/semantic.js";
 const app = document.querySelector("#app");
 const error = document.querySelector("#error");
 let conversation, envelope;
+let status = { configured: false },
+  suspendedConversation;
 const el = (tag, text, cls) => {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -24,6 +29,30 @@ function report(e) {
 function stage(n) {
   app.replaceChildren();
   error.hidden = true;
+  document.body.dataset.step = String(n);
+  document.querySelector("#saved-packs").hidden = !envelope;
+  if (conversation?.semantic?.provider?.live === false) {
+    app.append(
+      el(
+        "p",
+        "SAMPLE · Hand-authored data, not a live model interpretation.",
+        "sample-banner",
+      ),
+    );
+    if (suspendedConversation)
+      app.append(
+        button(
+          "Return to my own idea",
+          () => {
+            conversation = suspendedConversation;
+            suspendedConversation = undefined;
+            save();
+            start();
+          },
+          true,
+        ),
+      );
+  }
   document.querySelectorAll("#progress li").forEach((li, i) => {
     li.classList.toggle("active", i === n);
     if (i === n) li.setAttribute("aria-current", "step");
@@ -68,6 +97,8 @@ function input(id, caption, value = "") {
   return box;
 }
 function save() {
+  // Exploring a sample must never replace the person's persisted draft.
+  if (conversation?.semantic?.provider?.live === false) return;
   try {
     localStorage.setItem("theduck-conversation", JSON.stringify(conversation));
     localStorage.setItem("theduck-conversation-active", "true");
@@ -83,28 +114,77 @@ function start() {
   stage(0);
   title(
     "What do you want to build?",
-    "Tell me like you’d tell a friend. A messy idea is a perfectly good start.",
+    "Tell me like you’d tell a friend. No jargon needed.",
   );
   const idea = input("idea", "Your idea", conversation?.idea || "");
   idea.rows = 7;
-  idea.placeholder =
-    "I want to take a photo of an antique and find out if it’s valuable — and why…";
+  idea.placeholder = "I have this idea for something that would help people…";
   actions(
-    button("Make sense of my idea →", () => {
+    button("Think it out with TheDuck →", async () => {
       if (!conversation || conversation.idea !== idea.value.trim())
         conversation = createExperience(idea.value);
       save();
-      heard();
+      if (conversation.semantic) heard();
+      else await interpret();
     }),
   );
   app.append(
     el(
       "p",
-      "Local preview · Your words stay in this browser. Language rules help shape familiar ideas; anything unclear stays visible for you to correct.",
+      status.configured
+        ? "Your idea and corrections are sent to the configured understanding model. You review every decision before locking."
+        : "The understanding model is not connected yet. You can save your idea or explore a clearly labelled sample.",
       "hint privacy",
     ),
   );
+  actions(button("Explore a sample", loadSample, true));
   if (envelope) actions(button("Return to my saved lock", showPacks, true));
+}
+async function loadSample() {
+  if (conversation?.semantic?.provider?.live !== false)
+    suspendedConversation = conversation;
+  const response = await fetch("/api/sample");
+  if (!response.ok) throw Error("The sample could not be loaded.");
+  const sample = await response.json();
+  conversation = acceptInterpretation(createExperience(sample.idea), sample);
+  heard();
+}
+async function interpret() {
+  const current = conversation;
+  stage(1);
+  title(
+    "Thinking it through…",
+    "Finding the meaning in your words and the decisions that matter.",
+  );
+  app.setAttribute("aria-busy", "true");
+  try {
+    const response = await fetch("/api/understand", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(current),
+    });
+    const result = await response.json();
+    if (!response.ok)
+      throw Error(result.error || "The model could not interpret this idea.");
+    if (conversation !== current) return;
+    conversation = acceptInterpretation(current, result);
+    save();
+    heard();
+  } catch (e) {
+    if (conversation !== current) return;
+    stage(1);
+    title("Your idea is still here", e.message);
+    block("You said", conversation.idea);
+    actions(
+      button("Retry understanding", interpret),
+      button("Back to my idea", start, true),
+      button("Explore a sample", loadSample, true),
+    );
+    if (conversation.semantic)
+      actions(button("Keep the previous interpretation", shapedIdea, true));
+  } finally {
+    app.removeAttribute("aria-busy");
+  }
 }
 function block(label, value, cls = "") {
   if (!value?.length) return;
@@ -124,6 +204,12 @@ function heard() {
     "Here’s what I heard",
     "This is my interpretation, not a decision made for you.",
   );
+  const original = el("details", undefined, "original-idea");
+  original.append(
+    el("summary", "You said"),
+    el("blockquote", conversation.idea),
+  );
+  app.append(original);
   block("What you’re building", shaped.model.definition);
   block(
     "Who I think it’s for",
@@ -210,6 +296,14 @@ function correction(mode) {
     jtbd: "What it helps them do",
     journey: "The core experience",
     scope: "What matters in the first version",
+    ...(conversation.version === 2
+      ? {
+          nonGoals: "What is left out",
+          constraints: "The promises it must keep",
+          assumptions: "What is still uncertain",
+          acceptance: "How you’ll know it is ready",
+        }
+      : {}),
   })) {
     const option = el("option", text);
     option.value = value;
@@ -252,6 +346,24 @@ function shapedIdea() {
     shaped.model.acceptance.filter((s) => !acceptedValues.includes(s)),
   );
   block("Still unresolved", shaped.model.assumptions);
+  if (conversation.version === 2 && shaped.blocking.length)
+    block("Still to decide", shaped.blocking);
+  if (
+    conversation.version === 2 &&
+    conversation.semantic.provider.live &&
+    conversation.semantic.updates === 0 &&
+    Object.keys(conversation.answers).length &&
+    !Object.keys(conversation.suggestionChoices).length
+  ) {
+    actions(button("Reflect my decisions", interpret, true));
+    app.append(
+      el(
+        "p",
+        "One optional model update. Your explicit answers and corrections stay fixed.",
+        "hint",
+      ),
+    );
+  }
   const decisions = shaped.questions.filter((q) => q.answer);
   if (decisions.length) {
     app.append(el("h3", "Your choices so far"));
@@ -281,7 +393,7 @@ function shapedIdea() {
   for (const s of shaped.proposals) {
     const card = el("section", undefined, "suggestion");
     card.append(
-      el("span", "THEDUCK SUGGESTION", "tag"),
+      el("span", "TheDuck suggests", "tag"),
       el("h4", s.title),
       el("p", s.value),
       el("p", s.why, "hint"),
@@ -328,13 +440,14 @@ function shapedIdea() {
   );
   for (const row of shaped.fidelity) {
     const card = el("section", undefined, "fidelity-row");
+    card.dataset.status = row.status;
     card.append(
-      el("span", row.status, "tag"),
+      el("span", row.status, "tag status"),
       el(
         "h4",
         row.said === "—" ? "TheDuck proposed" : `You said: “${row.said}”`,
       ),
-      el("p", row.placed),
+      el("p", row.placed, "understood"),
     );
     if (row.choice) card.append(el("p", row.choice, "hint"));
     if (row.id !== undefined && row.status === "UNRESOLVED")
@@ -368,6 +481,7 @@ function shapedIdea() {
       ),
     );
   app.append(
+    el("h3", "Does this still feel like your idea?", "lock-heading"),
     el(
       "p",
       "Locking means you approve this interpretation and the suggestions you accepted. The three packs will describe this exact product.",
@@ -378,8 +492,10 @@ function shapedIdea() {
     envelope = await lock({ experience: conversation }, true);
     let storageError = false;
     try {
-      localStorage.setItem("theduck-lock", JSON.stringify(envelope));
-      localStorage.setItem("theduck-conversation-active", "false");
+      if (conversation?.semantic?.provider?.live !== false) {
+        localStorage.setItem("theduck-lock", JSON.stringify(envelope));
+        localStorage.setItem("theduck-conversation-active", "false");
+      }
     } catch {
       storageError = true;
     }
@@ -392,6 +508,7 @@ function shapedIdea() {
       );
   });
   yes.disabled = shaped.blocking.length > 0;
+  yes.classList.add("lock-action");
   actions(
     yes,
     button("Almost — change something", () => correction("almost"), true),
@@ -512,15 +629,35 @@ async function showPacks() {
   );
 }
 try {
+  document.querySelector("#new-idea").onclick = () => {
+    conversation = undefined;
+    start();
+  };
+  document.querySelector("#saved-packs").onclick = () =>
+    showPacks().catch(report);
+  try {
+    status = await (await fetch("/api/status")).json();
+  } catch {
+    status = { configured: false };
+  }
   const savedConversation = localStorage.getItem("theduck-conversation");
   if (savedConversation) {
     conversation = JSON.parse(savedConversation);
-    shapeExperience(conversation);
+    if (conversation.version !== 2)
+      conversation = createExperience(conversation.idea);
+    if (conversation.semantic) shapeExperience(conversation);
   }
   const saved = localStorage.getItem("theduck-lock");
   if (saved) envelope = await verify(JSON.parse(saved));
-  if (conversation && (!envelope || envelope.contract.idea !== conversation.idea || localStorage.getItem("theduck-conversation-active") === "true")) heard();
-  else if (envelope) await showPacks();
+  if (
+    conversation &&
+    (!envelope ||
+      envelope.contract.idea !== conversation.idea ||
+      localStorage.getItem("theduck-conversation-active") === "true")
+  ) {
+    if (conversation.semantic) heard();
+    else start();
+  } else if (envelope) await showPacks();
   else start();
 } catch (e) {
   conversation = undefined;

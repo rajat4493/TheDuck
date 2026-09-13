@@ -1,0 +1,9 @@
+{
+  "recordedAt": "2026-09-13T07:52:49.369Z",
+  "provider": "openai",
+  "model": null,
+  "liveCalls": 0,
+  "state": "IMPLEMENTED NOT VERIFIED",
+  "cases": [],
+  "reason": "OPENAI_API_KEY and OPENAI_MODEL are not both configured. No live model call was made. Fixture tests are not semantic evidence."
+}

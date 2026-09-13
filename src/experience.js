@@ -1,4 +1,6 @@
-// Pre-lock interpretation only. No persistence, network calls, or pack generation.
+// Version 1 is retained only for old draft compatibility and regression fixtures.
+// New ideas use the vendor-neutral semantic path; no product-family rules are used there.
+import { shapeSemantic } from "./semantic.js";
 const HUMAN = "HUMAN";
 const INTERPRETED = "THEDUCK-SUGGESTED + HUMAN-APPROVED";
 const split = (text) =>
@@ -38,7 +40,23 @@ export function correctExperience(state, text, field = "scope") {
   if (text.length > 5000)
     throw Error("Keep this correction within 5,000 characters.");
   // Keep explicit earlier decisions. A correction conflicts visibly rather than erasing them.
-  if (!["definition", "targetUser", "jtbd", "journey", "scope"].includes(field))
+  if (
+    !(
+      state.version === 2
+        ? [
+            "definition",
+            "targetUser",
+            "jtbd",
+            "journey",
+            "scope",
+            "nonGoals",
+            "constraints",
+            "assumptions",
+            "acceptance",
+          ]
+        : ["definition", "targetUser", "jtbd", "journey", "scope"]
+    ).includes(field)
+  )
     throw Error("Choose which part to correct.");
   return {
     ...structuredClone(state),
@@ -48,6 +66,7 @@ export function correctExperience(state, text, field = "scope") {
   };
 }
 export function shapeExperience(state) {
+  if (state.version === 2) return shapeSemantic(state);
   createExperience(state.idea);
   const corrections = state.corrections || [];
   const text = [state.idea, ...corrections].join("\n");
@@ -441,11 +460,21 @@ export function shapeExperience(state) {
     });
   }
   for (const correction of corrections) {
-    const field = Object.keys(state.edits || {}).find(key => state.edits[key] === correction);
-    const labels = {definition: "what you’re building", targetUser: "who it’s for", jtbd: "what it helps them do", journey: "the core experience", scope: "what matters in the first version"};
+    const field = Object.keys(state.edits || {}).find(
+      (key) => state.edits[key] === correction,
+    );
+    const labels = {
+      definition: "what you’re building",
+      targetUser: "who it’s for",
+      jtbd: "what it helps them do",
+      journey: "the core experience",
+      scope: "what matters in the first version",
+    };
     rows.push({
       said: correction,
-      placed: field ? `Applied to ${labels[field]}.` : "Earlier wording, replaced by a later correction.",
+      placed: field
+        ? `Applied to ${labels[field]}.`
+        : "Earlier wording, replaced by a later correction.",
       status: field ? "PRESERVED" : "INTERPRETED",
       source: "Your correction",
       fields: field ? [field] : [],
@@ -542,9 +571,10 @@ export function shapeExperience(state) {
         source: state.idea,
         value: model[field],
       };
-  for (const row of rows.filter(r => r.source === "Your answer")) {
+  for (const row of rows.filter((r) => r.source === "Your answer")) {
     for (const field of row.fields) {
-      if (sources[field] && !state.edits?.[field]) sources[field].source += `\nHuman choice: ${row.said} — ${row.placed}`;
+      if (sources[field] && !state.edits?.[field])
+        sources[field].source += `\nHuman choice: ${row.said} — ${row.placed}`;
     }
   }
   const fidelity = rows;
