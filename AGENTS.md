@@ -2,6 +2,8 @@
 
 Read `docs/PRODUCT_INTENT_LOCKED_V1.md` first. It is authoritative.
 
+Then read `docs/CLARIFICATION_001_DELIVERY_WORKBENCH.md`, `duck/CHANGE_PROPOSALS.md`, `duck/DECISIONS.md` and `duck/HANDOFF.md`.
+
 ## Core rule
 
 Challenge before lock. Protect after lock.

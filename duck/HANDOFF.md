@@ -1,47 +1,65 @@
 # Handoff
 
+Last updated: 2026-10-28, end of **M1.1 — Lock Core**.
+
 ## Current state
 
-TheDuck Product Intent v1 is locked and committed. The repo now contains the primary JTBD, three-pack artifact model, milestone plan, self-dogfood protocol and standing coding-agent contract.
+- M0 complete. **M1.1 complete and awaiting product-owner review.** M1.2 has not started and needs approval.
+- Locked intent: `docs/PRODUCT_INTENT_LOCKED_V1.md` (target user amended via approved CP-002; CP-001 rejected).
+- Owner clarification: `docs/CLARIFICATION_001_DELIVERY_WORKBENCH.md` — delivery discipline applies to this repo **and** to every generated Professional Pack (Delivery Profile + Readiness Matrix).
+- Decisions: `duck/DECISIONS.md` (D-001…D-008). Architecture: `docs/adr/ADR-001-m1-architecture.md`.
+- Evidence: `duck/EVIDENCE.md`. Receipt: `duck/receipts/2026-10-28-M1.1-lock-core.md`.
 
-## What is NOT built yet
+## What exists
 
-No SaaS application exists yet.
+- `src/core/` — framework-free TypeScript core (no UI):
+  - `model/` canonical Zod schemas, labels, fingerprint (`sha256` over canonical JSON), errors.
+  - `intent-gate/` `RefinementProvider` contract, deterministic `rulesProvider` (no AI), `createProject` → `nextQuestion` / `answerQuestion` → `editDraft` → `lockReadiness` → `lockIntent` (exact confirmation text required) → `proposeChange` / `decideChangeProposal` (only the human owner can approve; creates lock v(n+1)).
+  - `assurance/` decision cards; Delivery Profile + Readiness Matrix (8 workstreams); symbolic cost hypothesis; AI note for AI projects.
+  - `renderer/` Founder (6 files), Builder (9 files + `LOCK.json`), Professional (2 files); `inspectPack`; `checkPackConsistency`.
+  - `adapters/` `BuilderAdapter` + `runAdapter` guard; Universal only.
+  - `storage/` `FileProjectStore` — local prototype storage only.
+- `fixtures/` three made-up founder sessions; `tests/` 85 tests; `examples/` rendered packs (`npm run render:examples`).
 
-No intent-gate UI exists yet.
+## What is NOT built
 
-No builder adapter has been implemented yet.
+- No UI (Next.js and Playwright not installed yet). No ZIP download.
+- No LLM, API key or paid dependency. No external adapters, GitHub connection, auth or deployment.
+- No downstream coding platform has been invoked by TheDuck.
 
-No GitHub connection flow has been implemented yet.
+## How to verify
 
-No downstream coding platform has been invoked by TheDuck.
+```
+npm ci
+npm run check            # typecheck + lint + build + tests
+npm run render:examples  # regenerate examples/
+```
 
-## Exact next milestone
+## Constraints (unchanged)
 
-Build **M1 — Intent Gate Vertical Slice** only.
+- Do not build billing, teams/RBAC, dashboards, Cursor/Lovable/Codex/Claude Code integrations, GitHub sync, or pack re-import.
+- Generated packs are renderings of a lock snapshot, never sources of truth.
+- Keep the core framework-free; the UI calls it, it does not reimplement it.
+- Never describe the rules provider as AI.
 
-The product must let a user:
+## Blockers
 
-1. submit a rough software idea;
-2. answer a small number of focused clarification/challenge questions;
-3. review a plain-English Product Preview;
-4. explicitly lock the product intent;
-5. generate three consistent outputs from that lock: Founder/Vibe Coder Pack, AI Builder Pack, Professional Product Team Pack.
+None.
 
-## Constraints
+## Open questions (for the product owner)
 
-- do not build billing;
-- do not build teams/RBAC;
-- do not build a generic project-management dashboard;
-- do not add Cursor/Lovable integration yet;
-- do not let generated packs become separate sources of truth;
-- preserve a clear boundary between pre-lock suggestions and post-lock protection;
-- every material suggestion accepted by the user must retain provenance.
+1. Is 12–14 fixed questions "a small number"? (M1.2 founder review)
+2. After M1.2: add an optional LLM provider, or keep fixed questions? (D-001)
+3. Add a CI workflow (GitHub Actions) running `npm run check`? Not requested yet.
+4. Should the M1.2 local UI bind to localhost only? (recommended)
 
-## Evidence expected
+## Assumptions
 
-See `duck/MILESTONES.md` M1 exit criteria.
+- Generated acceptance criteria (one per journey step, rule and success check) are useful to builders.
+- Free-text founder answers are kept verbatim in every pack (needed for consistency checks).
 
-## Next action
+## Exact next action
 
-A coding agent should propose the smallest technical design for M1 and implementation plan, then build it against the locked intent without expanding scope.
+**Stop: product-owner review of M1.1 is required before M1.2.**
+
+After approval, the next agent should: install Next.js + Playwright (pinned, ≥2 weeks old), build the six M1.2 screens (Start, Refine, Product Preview, Lock confirmation, Project Room, Packs) on top of `src/core/index.ts` without moving logic into routes, add Playwright runs for the three fixtures, run a documented manual founder-readability review, then update this file, `duck/EVIDENCE.md` and a new receipt.

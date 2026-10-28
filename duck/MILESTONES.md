@@ -13,7 +13,7 @@ Exit criteria:
 - standing coding-agent rules committed;
 - first implementation milestone specified.
 
-Status: IN PROGRESS
+Status: **COMPLETE** (2026-10-28). All items above are committed; M1 was specified and split into M1.1–M1.3 with owner approval.
 
 ## M1 — Intent Gate Vertical Slice
 
@@ -49,6 +49,14 @@ Evidence required before M1 complete:
 - at least one deliberate drift test proving downstream generation cannot silently mutate locked intent;
 - founder VAT/UAT instructions generated in plain language;
 - no unsupported claim that a downstream coding platform was actually invoked unless it was.
+
+### M1 delivery slices (approved 2026-10-28)
+
+| Slice | Scope | Status |
+|---|---|---|
+| M1.1 — Lock Core | Canonical model, lock/fingerprint/versioning, Change Proposals, evidence/provenance, three pack renderers, Universal Builder Handover, delivery-readiness matrix, ADR-001, FinOps hypothesis, tests, `/duck` artefacts. No UI. | **COMPLETE — awaiting owner review** (evidence: `duck/EVIDENCE.md`) |
+| M1.2 — Founder UI | Next.js screens: Start, Refine, Product Preview, Lock confirmation, Project Room, Packs (view/copy/download). Playwright runs. Manual founder-readability review. Decide on optional LLM afterwards. | NOT STARTED — needs owner approval |
+| M1.3 — M1 evidence close-out | All ten M1 exit criteria demonstrated through the UI and recorded; fresh-agent handover check. | NOT STARTED |
 
 ## M2 — GitHub Continuity
 
