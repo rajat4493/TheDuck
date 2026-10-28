@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.theduck-data/
+*.tmp

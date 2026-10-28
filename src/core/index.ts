@@ -1,0 +1,21 @@
+/** TheDuck core — public surface for the M1.2 UI and tests. */
+export * from "./model/schema.ts";
+export * from "./model/labels.ts";
+export * from "./model/errors.ts";
+export { canonicalJson, sha256, shortFingerprint, readonlyCopy } from "./model/integrity.ts";
+export { fixedCtx, systemCtx } from "./model/context.ts";
+export type { Ctx } from "./model/context.ts";
+export * from "./intent-gate/provider.ts";
+export * from "./intent-gate/rules-provider.ts";
+export * from "./intent-gate/gate.ts";
+export * from "./intent-gate/change-proposals.ts";
+export * from "./assurance/decision-cards.ts";
+export * from "./assurance/readiness.ts";
+export * from "./renderer/common.ts";
+export * from "./renderer/founder.ts";
+export * from "./renderer/builder.ts";
+export * from "./renderer/professional.ts";
+export * from "./renderer/packs.ts";
+export * from "./adapters/adapter.ts";
+export * from "./adapters/universal.ts";
+export { FileProjectStore } from "./storage/fs-store.ts";
