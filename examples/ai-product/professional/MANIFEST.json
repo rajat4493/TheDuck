@@ -1,15 +1,15 @@
 {
   "projectId": "prj-0001",
   "lockVersion": 1,
-  "lockFingerprint": "sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d",
+  "lockFingerprint": "sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743",
   "files": [
     {
       "name": "PRODUCT_TEAM_HANDOVER.md",
-      "sha256": "sha256:d9ad4cda966c1ccb37b168c0e8d9aacfad9b9a8758e388328772ea5117e6111a"
+      "sha256": "sha256:2549e89a0287a713084ba855bb93f81c0b3554530d88e09f666c77fec58d7974"
     },
     {
       "name": "DELIVERY_READINESS.md",
-      "sha256": "sha256:7385fbb882245d1caac1e9fb76c69764f63fa220bca4bb8c9b54561283387a31"
+      "sha256": "sha256:209f44a53110e5a0e6d2779594224a287762af7b5daa57e0f79718712f9e27a7"
     }
   ]
 }

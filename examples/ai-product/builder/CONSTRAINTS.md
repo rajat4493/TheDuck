@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=builder file=CONSTRAINTS.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743 pack=builder file=CONSTRAINTS.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
 # Constraints
 
@@ -15,6 +15,7 @@
 
 - Product owner decision: Set the maximum acceptable AI cost per episode.
 - Professional question: Which specific service or provider will be used for: "A speech-to-text and AI writing service — to transcribe the episode and draft the text"?
+- Professional question: Check the chosen provider's data-use terms and settings for this rule: "Must not use uploaded audio to train AI models."
 - Professional question: Estimate how often one active person will use the AI feature each month.
 
 ## Explicit assumptions

@@ -1,31 +1,31 @@
 {
   "projectId": "prj-0001",
   "lockVersion": 1,
-  "lockFingerprint": "sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d",
+  "lockFingerprint": "sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743",
   "files": [
     {
       "name": "WHAT_YOU_ARE_BUILDING.md",
-      "sha256": "sha256:42cb396ea21d289168219343be676b22534738fa59475ca75cdcfacf4fa90cb0"
+      "sha256": "sha256:80dd05d9dbcfcc8ecd4f370ba13711de27d856154c79661a327940da9beb748a"
     },
     {
       "name": "WHAT_CHANGED.md",
-      "sha256": "sha256:ae745070d9213663a7255caed2850db5a94c0319a3f26e08045e76ef8faf5ec7"
+      "sha256": "sha256:5eef4cb279ca77039122e91a42b46c5e4bababef8c15d013c1f9e432da062570"
     },
     {
       "name": "CURRENT_OUTCOME.md",
-      "sha256": "sha256:0c793f561f6cafa2b0a94fb32c7a05f49b25787dadda041b92e52f67e2b3d7b4"
+      "sha256": "sha256:e62c98b9828312c1206bd8932a548bf3552824d8bc6f4fd7ef34a5d6249c8917"
     },
     {
       "name": "VAT_UAT.md",
-      "sha256": "sha256:b8e9bdd9c5017f5dbd0b2cde938f7ee338d469dacb28f810418b95545eb0c15f"
+      "sha256": "sha256:ee18ebd034edc34a51b23cd0b94a8e07aeda9d1896c3dacb47519414a271072a"
     },
     {
       "name": "PRODUCT_PITCH.md",
-      "sha256": "sha256:e470f59155e184bd91828b14eb7d06e6fbf05bc1424a025d25c242d8b917cc82"
+      "sha256": "sha256:a6c892ea0118a28a21d96bd77d27b17bc5d4df156882f18d2a65d382b12fe861"
     },
     {
       "name": "FOUNDER_TECH_NOTES.md",
-      "sha256": "sha256:c8693653c14f5b19d5bbf9753ba7dddf92050fd98002d5dab1e5ff4434eefc6d"
+      "sha256": "sha256:0aa612278b02a6464ed0267c0a8cf9d3e421e8a4fcc093572209a1bf7f409cd8"
     }
   ]
 }

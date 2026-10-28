@@ -1,9 +1,9 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=professional file=PRODUCT_TEAM_HANDOVER.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743 pack=professional file=PRODUCT_TEAM_HANDOVER.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
 # Product team handover — ShowNotes AI
 
-Lock v1 · `sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d`
+Lock v1 · `sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743`
 
 ## 1. Product overview and problem statement
 
@@ -43,7 +43,8 @@ Must never:
 
 ### LOCKED ACCEPTANCE CRITERIA
 
-- **AC-01** — When any user or process attempts to use uploaded audio to train AI models, the system shall prevent it.
+- **AC-01** — When any part of the product itself attempts to use uploaded audio to train AI models, the system shall prevent it.
+  - Condition: Cannot be marked VERIFIED until the outside provider is chosen and its data-use terms and configuration have been checked and recorded. A test of the product alone does not prove what a provider does with the data.
 - **AC-02** — When any user or process attempts to publish, send or act on AI output without the user's approval, the system shall prevent it.
 - **AC-03** — When the first version is evaluated, the product owner shall be able to observe that: Five podcasters use it on a real episode and say they would use it again.
 
@@ -87,6 +88,7 @@ Open decisions for the product owner:
 Open professional questions:
 
 - Which specific service or provider will be used for: "A speech-to-text and AI writing service — to transcribe the episode and draft the text"?
+- Check the chosen provider's data-use terms and settings for this rule: "Must not use uploaded audio to train AI models."
 - Estimate how often one active person will use the AI feature each month.
 
 Explicit assumptions:

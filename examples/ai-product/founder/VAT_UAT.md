@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=founder file=VAT_UAT.md -->
-> Made from your locked product definition (version 1, fingerprint `908b4794a3ae`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743 pack=founder file=VAT_UAT.md -->
+> Made from your locked product definition (version 1, fingerprint `0db8680577a9`). If anything here looks different from what you approved, the locked version wins.
 
 # Your own checks before you call it done
 
@@ -16,7 +16,7 @@ Do these yourself. Tick each one only when you have seen it with your own eyes �
 
 ## Agreed checks
 
-- [ ] **AC-01** — Try to make this happen on purpose: use uploaded audio to train AI models. It should not be possible.
+- [ ] **AC-01** — You cannot fully check this one yourself, because it depends on the outside provider you choose. Ask your builder to show you that provider's terms and settings proving it will not use uploaded audio to train AI models, and when they were checked.
 - [ ] **AC-02** — Try to make this happen on purpose: publish, send or act on AI output without the user's approval. It should not be possible.
 - [ ] **AC-03** — Check for yourself: Five podcasters use it on a real episode and say they would use it again.
 

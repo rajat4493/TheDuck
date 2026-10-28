@@ -14,16 +14,17 @@
     "targetUser": "HUMAN",
     "usesAI": "HUMAN"
   },
-  "fingerprint": "sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d",
+  "fingerprint": "sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743",
   "intent": {
     "acceptanceCriteria": [
       {
-        "founderCheck": "Try to make this happen on purpose: use uploaded audio to train AI models. It should not be possible.",
-        "howToCheck": "Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.",
+        "founderCheck": "You cannot fully check this one yourself, because it depends on the outside provider you choose. Ask your builder to show you that provider's terms and settings proving it will not use uploaded audio to train AI models, and when they were checked.",
+        "howToCheck": "Two parts. (1) Product: deliberately attempt it through the product's own code and its calls to outside services; expected: blocked and recorded. (2) Provider: record which provider was chosen, the contract or data-use terms, and the account settings that rule it out, with the date checked.",
         "id": "AC-01",
         "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
         "source": "must_not",
-        "statement": "When any user or process attempts to use uploaded audio to train AI models, the system shall prevent it."
+        "statement": "When any part of the product itself attempts to use uploaded audio to train AI models, the system shall prevent it.",
+        "verificationCondition": "Cannot be marked VERIFIED until the outside provider is chosen and its data-use terms and configuration have been checked and recorded. A test of the product alone does not prove what a provider does with the data."
       },
       {
         "founderCheck": "Try to make this happen on purpose: publish, send or act on AI output without the user's approval. It should not be possible.",

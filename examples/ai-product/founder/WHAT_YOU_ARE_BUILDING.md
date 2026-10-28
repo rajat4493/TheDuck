@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
-> Made from your locked product definition (version 1, fingerprint `908b4794a3ae`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:0db8680577a98167d1676dc2be0e8e48c7e0ba0ae1f911a7d565c3f13ea99743 pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
+> Made from your locked product definition (version 1, fingerprint `0db8680577a9`). If anything here looks different from what you approved, the locked version wins.
 
 # What you are building
 
@@ -34,7 +34,7 @@ Publishing an episode's written material takes under 15 minutes instead of about
 ## How you will know it is done
 
 - Five podcasters use it on a real episode and say they would use it again
-- The AI cost of one episode stays under the agreed cost limit
+- A success check awaiting your decision: The AI cost of one episode stays under the agreed cost limit (it cannot be used to decide "done" until you decide — see "Still waiting for you")
 
 ## What kind of product this is
 
@@ -57,7 +57,8 @@ Publishing an episode's written material takes under 15 minutes instead of about
 
 You do not need to answer these yourself, but they must be settled before anyone calls the product done.
 
-- Which specific service or provider will be used for: "A speech-to-text and AI writing service — to transcribe the episode and draft the text"? — The choice affects cost, privacy terms and reliability. A builder or professional proposes options; you approves.
+- Which specific service or provider will be used for: "A speech-to-text and AI writing service — to transcribe the episode and draft the text"? — The choice affects cost, privacy terms and reliability. A builder or professional proposes options; you approve.
+- Check the chosen provider's data-use terms and settings for this rule: "Must not use uploaded audio to train AI models." — TheDuck cannot test or prevent what an outside provider does with data. Until the provider, its contract or data-use terms, and its settings are chosen and checked, this rule cannot be marked as proven.
 - Estimate how often one active person will use the AI feature each month. — AI costs money every time it runs. Without an estimate there is no cost model; treat any estimate as an assumption until real usage is measured.
 - 5 of your checks are not precise enough to test yet (VC-01, VC-02, VC-03, VC-04, VC-05). Your builder must agree the exact expected result with you before calling any of them done.
 
