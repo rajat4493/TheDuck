@@ -1,12 +1,16 @@
 # TheDuck Product Intent v1 — LOCKED
 
-Status: **LOCKED by product owner on 2026-09-13**
+Status: **LOCKED by product owner on 2026-09-13** · Amended 2026-10-28 via CP-002 (target user) — see Amendment log
 
 ## Canonical definition
 
 TheDuck is the human-intent gate for AI software creation.
 
 It helps ordinary people turn a rough software idea into an explicitly approved and locked product intent, generates the right artifacts for the founder, AI builders, and professional product teams, preserves continuity across coding agents and milestones, and verifies that the resulting product still matches what the human approved.
+
+## Target user
+
+Ordinary people—especially non-technical or semi-technical founders and builders—creating a real software product with AI coding tools.
 
 ## Primary JTBD
 
@@ -137,3 +141,9 @@ A successful TheDuck project means:
 ## Change control
 
 This file is authoritative. It may only be changed after an explicit product-owner decision to amend the lock. Implementation discoveries should be recorded elsewhere until approved.
+
+## Amendment log
+
+| Date | Change Proposal | Field | Change | Provenance |
+|---|---|---|---|---|
+| 2026-10-28 | CP-002 (`duck/CHANGE_PROPOSALS.md`) | Target user | Added explicit "Target user" section. No other locked wording changed. | THEDUCK-SUGGESTED + HUMAN-APPROVED |
