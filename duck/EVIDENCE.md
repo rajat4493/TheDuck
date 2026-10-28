@@ -52,3 +52,73 @@ M1.1 proves these at the **core/API level only**. No founder has used a UI.
 - ASSUMPTION: 12–14 fixed questions is acceptable as "a small number". To be judged by the founder in M1.2.
 - ASSUMPTION: deterministic acceptance-criteria wording (one per journey step, rule and success check) is useful to builders.
 - OPEN QUESTION: whether founders will accept that free-text answers are kept verbatim (e.g. "for Independent podcasters…" keeps the capital letter).
+
+## M1.1.1 — Truth and Founder-Experience Correction (2026-10-28)
+
+Additive correction record. The M1.1 section above is unchanged and remains
+valid for the mechanisms it tested (lock, fingerprint, provenance, Change
+Proposals, drift guards, cross-pack agreement). It did **not** test whether an
+output was materially misleading. Full narrative:
+`duck/receipts/2026-10-28-M1.1.1-truth-correction.md`.
+
+### Status changes to M1.1 statements
+
+| M1.1 statement | M1.1.1 state | Why |
+|---|---|---|
+| ASSUMPTION: 12–14 fixed questions is acceptable as "a small number" | FAILED (owner review) | Replaced by 5 core + ≤3 follow-ups. |
+| Exit criterion 6 "VERIFIED (curated assertions)" | VERIFIED (curated assertions), with a caveat | The assertions passed, but the AI sample's founder pack still hid an undecided cost limit. Now covered by a regression test. |
+| ASSUMPTION: deterministic acceptance criteria are useful to builders | FAILED for journey-step criteria (owner review) | Journey steps are now draft verification candidates, not acceptance criteria. |
+
+### Defects observed in committed M1.1 output (`eaa5bb6`)
+
+| Check | Observed |
+|---|---|
+| `git show eaa5bb6:examples/README.md` | 13 / 14 / 12 questions |
+| `git show eaa5bb6:examples/ai-product/founder/WHAT_YOU_ARE_BUILDING.md` | line 37 "…under the agreed cost limit"; line 48 "Nothing is waiting for your decision right now." |
+| `git show eaa5bb6:examples/ai-product/builder/ACCEPTANCE_CRITERIA.md` | 4 × "Main journey step N works…" as locked acceptance criteria |
+| same founder file, must-never section | "- Use uploaded audio to train AI models" (bare action) |
+
+### Commands run and observed results
+
+Environment: Node v22.22.0, npm 10.9.4. From a clean `rm -rf node_modules dist && npm ci`.
+
+| Command | Observed result | State |
+|---|---|---|
+| `npm ci` / `npm audit` | `found 0 vulnerabilities` | VERIFIED |
+| `npm run check` | exit 0 — typecheck, lint, build clean; `Test Files 9 passed (9)`, `Tests 108 passed (108)` | VERIFIED |
+| built output | `dist/core/index.js` imports; `MAX_QUESTIONS` = 8; provider `theduck-rules-v2` | VERIFIED |
+| `npm run render:examples` | 6 questions per sample; consistency problems: 0 | VERIFIED |
+| `grep "Nothing is waiting" examples/*/founder/*.md` | no matches | VERIFIED |
+| `grep -r "Main journey step" examples` | no matches | VERIFIED |
+| Manual browser verification | not applicable — no UI | — |
+
+### New tests (`tests/m1-1-1-corrections.test.ts`, 23)
+
+- **Correction 1:**
+  - ≤5 core and ≤3 follow-ups per sample;
+  - the worst case stops at exactly 8 questions;
+  - the core pass covers the five commitments;
+  - every question offers "not sure";
+  - the gate refuses a sixth core question or a fourth follow-up;
+  - "not sure" on a core question becomes a visible open question that the preview can close;
+  - "not sure" on a follow-up stays open through lock and appears in founder, builder and professional packs.
+- **Correction 2:**
+  - REGRESSION on the exact ShowNotes sample: the "agreed cost limit" becomes the decision "Set the maximum acceptable AI cost per episode.", is shown in every pack, and is never accompanied by "Nothing is waiting";
+  - the check is not a locked acceptance criterion but a blocked candidate;
+  - setting "$0.50" resolves it;
+  - placeholder and undefined-value detection;
+  - a generic provider is a professional question;
+  - assumptions are kept separate from decisions.
+- **Correction 3:**
+  - for every sample: locked ACs are only must-not or measurable success checks in When/shall form, and journey steps appear only as draft candidates (in the Builder, Professional and Universal packs, with the refine instruction);
+  - "Upload an episode audio file" is not implementation-ready;
+  - owner-written criteria lock as HUMAN.
+- **Correction 4:**
+  - REGRESSION: "Must not use uploaded audio to train AI models." appears in every pack;
+  - no bare action appears under any must-never heading, in any pack.
+
+### Open after M1.1.1
+
+- OPEN QUESTION: does the first-pass question count (5 core; 6 in each sample; 8 at most) feel right to real founders? Needs real founders using the M1.2 UI.
+- ASSUMPTION: the unresolved-reference patterns cover common phrasings; they are rules, not understanding.
+- IMPLEMENTED NOT VERIFIED: fresh-agent handover (M1.3).

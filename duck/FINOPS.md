@@ -26,7 +26,7 @@ Cost per locked project ≈ Q × (T_in × P_in + T_out × P_out)
 | Scenario | Q (questions with an LLM call) | Note |
 |---|---|---|
 | low | 8 | ASSUMPTION |
-| base | 13 | M1.1 fixtures asked 12–14 questions (VERIFIED by fixture runs) |
+| base | 13 | M1.1 fixtures asked 12–14 questions (VERIFIED by fixture runs). Superseded in M1.1.1: samples now ask 6, maximum 8 — re-base Q before modelling an LLM. |
 | high | 25 | retries / re-asks; ASSUMPTION |
 
 Unknowns: T_in / T_out (tokens per call) not measured; P_in / P_out not verified;

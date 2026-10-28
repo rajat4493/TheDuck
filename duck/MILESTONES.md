@@ -54,7 +54,8 @@ Evidence required before M1 complete:
 
 | Slice | Scope | Status |
 |---|---|---|
-| M1.1 — Lock Core | Canonical model, lock/fingerprint/versioning, Change Proposals, evidence/provenance, three pack renderers, Universal Builder Handover, delivery-readiness matrix, ADR-001, FinOps hypothesis, tests, `/duck` artefacts. No UI. | **COMPLETE — awaiting owner review** (evidence: `duck/EVIDENCE.md`) |
+| M1.1 — Lock Core | Canonical model, lock/fingerprint/versioning, Change Proposals, evidence/provenance, three pack renderers, Universal Builder Handover, delivery-readiness matrix, ADR-001, FinOps hypothesis, tests, `/duck` artefacts. No UI. | COMPLETE — owner review found four output defects → M1.1.1 |
+| M1.1.1 — Truth and Founder-Experience Correction | Short first pass (≤5 core + ≤3 follow-ups, "not sure yet"); unresolved-reference check; locked acceptance criteria vs draft verification candidates; explicit must-not prohibitions. No new capability. | **COMPLETE — awaiting owner review** (evidence: `duck/EVIDENCE.md` M1.1.1) |
 | M1.2 — Founder UI | Next.js screens: Start, Refine, Product Preview, Lock confirmation, Project Room, Packs (view/copy/download). Playwright runs. Manual founder-readability review. Decide on optional LLM afterwards. | NOT STARTED — needs owner approval |
 | M1.3 — M1 evidence close-out | All ten M1 exit criteria demonstrated through the UI and recorded; fresh-agent handover check. | NOT STARTED |
 

@@ -10,7 +10,7 @@ TheDuck Product Intent v1 is locked (target user amended via CP-002).
 
 This repository is now dogfooding TheDuck while TheDuck itself is built.
 
-**M1.1 Lock Core is built** (TypeScript core, no UI yet): `npm ci && npm run check`.
+**M1.1 Lock Core is built, with the M1.1.1 correction** (TypeScript core, no UI yet): `npm ci && npm run check`.
 Example packs rendered from made-up fixtures are in `examples/`. Current state and
 next action: `duck/HANDOFF.md`.
 

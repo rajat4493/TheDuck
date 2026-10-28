@@ -68,3 +68,11 @@ may call a coding platform, use paid services, or require accounts.
   `legacy-peer-deps=true` because npm 10.9 crashes resolving Vitest 5's optional
   browser peers.
 - Next.js and Playwright are approved but not installed until M1.2.
+
+## Amendment — M1.1.1 (2026-10-28, HUMAN-requested correction)
+
+- Profile fields (stage, data sensitivity, uses AI) may be locked as undecided; renderers show them as an explicit ASSUMPTION or an OPEN QUESTION.
+- `assurance/open-items.ts` derives unresolved references, founder decision cards, professional open questions and explicit assumptions from intent.
+- `assurance/verification.ts` separates LOCKED ACCEPTANCE CRITERIA (stored in the lock) from DRAFT VERIFICATION CANDIDATES (derived, never stored as locked criteria).
+- The gate enforces first-session limits per question tier (5 core, 3 follow-ups).
+
