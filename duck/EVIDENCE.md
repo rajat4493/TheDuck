@@ -122,3 +122,17 @@ Environment: Node v22.22.0, npm 10.9.4. From a clean `rm -rf node_modules dist &
 - OPEN QUESTION: does the first-pass question count (5 core; 6 in each sample; 8 at most) feel right to real founders? Needs real founders using the M1.2 UI.
 - ASSUMPTION: the unresolved-reference patterns cover common phrasings; they are rules, not understanding.
 - IMPLEMENTED NOT VERIFIED: fresh-agent handover (M1.3).
+
+## M1.1.2 — Narrow correction (2026-10-28)
+
+Additive. Sections above unchanged. Narrative: `duck/receipts/2026-10-28-M1.1.2-narrow-correction.md`.
+
+| Command / check | Observed result | State |
+|---|---|---|
+| `npm ci` / `npm audit` | `found 0 vulnerabilities` | VERIFIED |
+| `npm run check` | exit 0; `Test Files 10 passed (10)`, `Tests 118 passed (118)` | VERIFIED |
+| `npm run render:examples` | 6 questions per sample; consistency problems: 0 | VERIFIED |
+| `grep -r "you approves" examples` | no matches | VERIFIED |
+| AI sample AC-01 | product-only statement plus verification condition; provider question in founder, builder, professional and universal packs | VERIFIED (`tests/m1-1-2-corrections.test.ts`) |
+| AI sample "How you will know it is done" | cost item labelled "A success check awaiting your decision" | VERIFIED |
+| Whether the chosen provider actually trains on data | not checkable — no provider chosen | OPEN QUESTION |

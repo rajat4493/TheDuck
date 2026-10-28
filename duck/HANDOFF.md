@@ -1,14 +1,14 @@
 # Handoff
 
-Last updated: 2026-10-28, end of **M1.1.1 — Truth and Founder-Experience Correction**.
+Last updated: 2026-10-28, end of **M1.1.2 — Narrow correction**.
 
 ## Current state
 
-- M0 complete. M1.1 complete. Owner review of M1.1 found four misleading-output defects; **M1.1.1 corrects them and is awaiting product-owner review.** M1.2 has not started and needs approval.
+- M0 complete. M1.1 complete. Owner review of M1.1 found four misleading-output defects; M1.1.1 corrected them; the owner confirmed and asked for three narrow fixes; **M1.1.2 makes them and is awaiting product-owner review.** M1.2 has not started and needs approval.
 - Locked intent: `docs/PRODUCT_INTENT_LOCKED_V1.md` (target user amended via approved CP-002; CP-001 rejected).
 - Owner clarification: `docs/CLARIFICATION_001_DELIVERY_WORKBENCH.md` — delivery discipline applies to this repo **and** to every generated Professional Pack (Delivery Profile + Readiness Matrix).
-- Decisions: `duck/DECISIONS.md` (D-001…D-012). Architecture: `docs/adr/ADR-001-m1-architecture.md`.
-- Evidence: `duck/EVIDENCE.md` (M1.1 and M1.1.1 sections). Receipts: `duck/receipts/2026-10-28-M1.1-lock-core.md`, `duck/receipts/2026-10-28-M1.1.1-truth-correction.md` (correction record).
+- Decisions: `duck/DECISIONS.md` (D-001…D-015). Architecture: `docs/adr/ADR-001-m1-architecture.md`.
+- Evidence: `duck/EVIDENCE.md` (M1.1 and M1.1.1 sections). Receipts: `duck/receipts/2026-10-28-M1.1-lock-core.md`, `duck/receipts/2026-10-28-M1.1.1-truth-correction.md`, `duck/receipts/2026-10-28-M1.1.2-narrow-correction.md` (correction records).
 
 ## What exists
 
@@ -19,7 +19,7 @@ Last updated: 2026-10-28, end of **M1.1.1 — Truth and Founder-Experience Corre
   - `renderer/` Founder (6 files), Builder (9 files + `LOCK.json`), Professional (2 files); `inspectPack`; `checkPackConsistency`.
   - `adapters/` `BuilderAdapter` + `runAdapter` guard; Universal only.
   - `storage/` `FileProjectStore` — local prototype storage only.
-- `fixtures/` three made-up founder sessions (6 questions each, rest via preview); `tests/` 108 tests; `examples/` rendered packs (`npm run render:examples`).
+- `fixtures/` three made-up founder sessions (6 questions each, rest via preview); `tests/` 118 tests; `examples/` rendered packs (`npm run render:examples`).
 
 ## What is NOT built
 
@@ -61,6 +61,6 @@ None.
 
 ## Exact next action
 
-**Stop: product-owner review of M1.1.1 is required before M1.2.** Start the review with `examples/ai-product/founder/WHAT_YOU_ARE_BUILDING.md` and `examples/ai-product/builder/ACCEPTANCE_CRITERIA.md`.
+**Stop: product-owner review of M1.1.2 is required before M1.2.** Start the review with `examples/ai-product/founder/WHAT_YOU_ARE_BUILDING.md`, `examples/ai-product/founder/VAT_UAT.md` and `examples/ai-product/builder/ACCEPTANCE_CRITERIA.md` (AC-01).
 
 Do not begin Next.js, UI work, Playwright, live AI or any new capability until the owner approves. After approval, the next agent should: install Next.js + Playwright (pinned, ≥2 weeks old), build the six M1.2 screens (Start, Refine, Product Preview, Lock confirmation, Project Room, Packs) on top of `src/core/index.ts` without moving logic into routes, add Playwright runs for the three fixtures, run a documented manual founder-readability review, then update this file, `duck/EVIDENCE.md` and a new receipt.
