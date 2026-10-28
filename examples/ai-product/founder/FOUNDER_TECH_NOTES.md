@@ -1,20 +1,59 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7 pack=founder file=FOUNDER_TECH_NOTES.md -->
-> Made from your locked product definition (version 1, fingerprint `8eefb103c25e`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=founder file=FOUNDER_TECH_NOTES.md -->
+> Made from your locked product definition (version 1, fingerprint `908b4794a3ae`). If anything here looks different from what you approved, the locked version wins.
 
 # What you should know as the owner
 
 These notes turn the professional checklist into what it means for you. Most important first.
 
-### The experience for your users — Needs work before real use (REQUIRED)
+### The experience for your users — Still undecided (OPEN QUESTION)
 
 Nobody has tried the journey yet. Watching a few real people use it is the cheapest way to find problems.
 
 <details><summary>Technical detail</summary>
 
 - Workstream: Product and UX
-- Why this status: Always required.
-- Next professional action: Turn the 4-step main journey into screen flows and watch 3–5 real Independent podcasters who publish weekly and edit their own shows try them.
-- Unknowns: No one has tried the journey yet.
+- Why this status: 1 product decision(s) still open.
+- Next professional action: Turn the 4-step main journey into screen flows and watch 3–5 people from the target group try them.
+- Unknowns: No one has tried the journey yet. Set the maximum acceptable AI cost per episode.
+
+</details>
+
+### Information and connected services — Still undecided (OPEN QUESTION)
+
+It depends on "A speech-to-text and AI writing service — to transcribe the episode and draft the text". If that changes or goes down, your product is affected.
+
+<details><summary>Technical detail</summary>
+
+- Workstream: Data and integrations
+- Why this status: A connected service, its provider, its failure behaviour or the kind of data held is still undecided.
+- Next professional action: Confirm the provider, access, limits, terms and costs for: A speech-to-text and AI writing service — to transcribe the episode and draft the text.
+- Unknowns: Whether "A speech-to-text and AI writing service — to transcribe the episode and draft the text" offers the access needed (not checked).
+
+</details>
+
+### Checking it does what you approved — Still undecided (OPEN QUESTION)
+
+Some of your checks are not precise enough to test yet. Your builder must make them precise with you before calling anything done.
+
+<details><summary>Technical detail</summary>
+
+- Workstream: Quality and release engineering
+- Why this status: 3 locked acceptance criteria; 5 draft verification candidate(s) not yet testable; no evidence yet.
+- Next professional action: Refine the 5 draft verification candidate(s) with the product owner into testable criteria, then automate checks for all acceptance criteria and record evidence per criterion.
+- Unknowns: Nothing is built, so there is no evidence yet. VC-01: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-02: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-03: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-04: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-05: It depends on "agreed cost limit", which has not been decided. not defined.
+
+</details>
+
+### Running costs — Still undecided (OPEN QUESTION)
+
+AI costs money every time it runs, so your running cost grows with use. Nobody knows the real number yet; set a spending limit before inviting users.
+
+<details><summary>Technical detail</summary>
+
+- Workstream: FinOps / cost model
+- Why this status: A cost limit or usage estimate is still undecided.
+- Next professional action: Replace the symbolic cost model with verified provider prices (record source and date) and set a spending alert.
+- Unknowns: No provider prices have been checked. All prices are symbols, not numbers. Hosting provider and plan not chosen. Founder cost limit not set: Set the maximum acceptable AI cost per episode. (OPEN QUESTION) T_in / T_out (tokens per request) not measured. P_in / P_out (price per token) not verified from official provider pricing. Usage per person not estimated yet (OPEN QUESTION); scenarios below are placeholders.
 
 </details>
 
@@ -31,19 +70,6 @@ Real people will use it, so how it is hosted and backed up matters.
 
 </details>
 
-### Information and connected services — Needs work before real use (REQUIRED)
-
-It depends on "A speech-to-text and AI writing service — to transcribe the episode and draft the text". If that changes or goes down, your product is affected.
-
-<details><summary>Technical detail</summary>
-
-- Workstream: Data and integrations
-- Why this status: Holds personal information and/or depends on connected services.
-- Next professional action: Confirm access, limits, terms and costs for: A speech-to-text and AI writing service — to transcribe the episode and draft the text.
-- Unknowns: Whether "A speech-to-text and AI writing service — to transcribe the episode and draft the text" offers the access needed (not checked).
-
-</details>
-
 ### Keeping people's information safe — Needs work before real use (REQUIRED)
 
 It stores people's personal details, so it needs basic protection and a privacy notice.
@@ -54,32 +80,6 @@ It stores people's personal details, so it needs basic protection and a privacy 
 - Why this status: Handles basic personal details.
 - Next professional action: Basic protections: sign-in, access limits, a privacy notice and deletion on request.
 - Unknowns: none recorded.
-
-</details>
-
-### Checking it does what you approved — Needs work before real use (REQUIRED)
-
-You have a checklist (VAT_UAT) to try yourself before anyone calls it done.
-
-<details><summary>Technical detail</summary>
-
-- Workstream: Quality and release engineering
-- Why this status: 8 acceptance criteria locked; no evidence yet.
-- Next professional action: Automate checks for the 8 acceptance criteria and record evidence per criterion.
-- Unknowns: Nothing is built, so there is no evidence yet.
-
-</details>
-
-### Running costs — Needs work before real use (REQUIRED)
-
-AI costs money every time it runs, so your running cost grows with use. Nobody knows the real number yet; set a spending limit before inviting users.
-
-<details><summary>Technical detail</summary>
-
-- Workstream: FinOps / cost model
-- Why this status: Uses AI and/or will run in production; costs need a model and limits.
-- Next professional action: Replace the symbolic cost model with verified provider prices (record source and date) and set a spending alert.
-- Unknowns: No provider prices have been checked. All prices are symbols, not numbers. Hosting provider and plan not chosen. T_in / T_out (tokens per request) not measured. P_in / P_out (price per token) not verified from official provider pricing. Founder's usage estimate is "base" — an ASSUMPTION until real usage is observed.
 
 </details>
 
@@ -116,7 +116,7 @@ AI costs money every time it runs, so your running cost grows with use. Nobody k
 <details><summary>Technical detail</summary>
 
 - Measured per active user per month. Status: ASSUMPTION.
-- Suggested limit: Cap AI requests per user at the high scenario (200/month) and log tokens per request from day one.
+- Suggested limit: Use the founder's maximum acceptable cost (once set) as a hard limit per unit; cap AI requests per user and log tokens per request from day one.
 - Alert: Alert when monthly AI spend exceeds 1.5 × the base scenario, once real prices are verified.
 
 </details>

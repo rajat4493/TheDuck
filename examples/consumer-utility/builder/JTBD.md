@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:c18ef76142175bb618e17b826e291cc1dcc51533ae1c012a57db31b9565ceddb pack=builder file=JTBD.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:c18ef76142175bb618e17b826e291cc1dcc51533ae1c012a57db31b9565ceddb`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:5fabde37258c5beeab07abc4fc812eabec1a559cb44521e82fc0ed599bb6a1b7 pack=builder file=JTBD.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:5fabde37258c5beeab07abc4fc812eabec1a559cb44521e82fc0ed599bb6a1b7`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
 # Job to be done
 

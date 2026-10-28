@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9 pack=professional file=DELIVERY_READINESS.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:c038f4d788b4aa5ff7eb9e27611871e482eb40bdd564bdf8406fe2a1d71f038c pack=professional file=DELIVERY_READINESS.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:c038f4d788b4aa5ff7eb9e27611871e482eb40bdd564bdf8406fe2a1d71f038c`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
 # Delivery profile and readiness matrix
 
@@ -7,14 +7,19 @@
 
 | Workstream | Status | Why it matters | Next professional action |
 |---|---|---|---|
-| Product and UX | REQUIRED | The 4-step main journey must be easy for Patients of one partner physiotherapy clinic who have a home exercise plan. | Turn the 4-step main journey into screen flows and watch 3–5 real Patients of one partner physiotherapy clinic who have a home exercise plan try them. |
+| Product and UX | REQUIRED | The 4-step main journey must be easy for the target user. | Turn the 4-step main journey into screen flows and watch 3–5 people from the target group try them. |
 | Solution architecture | REQUIRED | This is a real product that people will rely on; the technical setup must match that. | Write an ADR covering hosting, data storage, backups, environments and how integrations connect. |
-| Data and integrations | REQUIRED | The product depends on outside services it does not control. | Confirm access, limits, terms and costs for: The clinic's practice management system — the source of each patient's exercise plan. |
+| Data and integrations | REQUIRED | The product depends on outside services it does not control. | Confirm the provider, access, limits, terms and costs for: The clinic's practice management system — the source of each patient's exercise plan. |
 | Security and privacy | REQUIRED | A leak of sensitive or regulated information can seriously harm people and create legal exposure. | A qualified security/privacy reviewer assesses data handling and which regulations apply before any real data is used. |
-| Quality and release engineering | REQUIRED | Without evidence per acceptance criterion, "done" is just a claim. | Automate checks for the 9 acceptance criteria and record evidence per criterion. |
+| Quality and release engineering | OPEN QUESTION | Without precise, testable criteria and evidence per criterion, "done" is just a claim. | Refine the 4 draft verification candidate(s) with the product owner into testable criteria, then automate checks for all acceptance criteria and record evidence per criterion. |
 | Operations and reliability | REQUIRED | Someone has to notice and fix problems when real people depend on it. | Define uptime expectations, monitoring, alerts, backups and who responds. |
 | FinOps / cost model | REQUIRED | Costs that grow with use can surprise you after launch. | Replace the symbolic cost model with verified provider prices (record source and date) and set a spending alert. |
-| AI system design and AIOps/LLMOps | NOT APPLICABLE | Only relevant if the product uses AI. | None unless AI is added through an approved Change Proposal. |
+| AI system design and AIOps/LLMOps | ASSUMPTION | Only relevant if the product uses AI. | None unless AI is added through an approved Change Proposal. |
+
+## Open professional actions
+
+- Refine 4 draft verification candidate(s) (VC-01, VC-02, VC-03, VC-04) into "When …, the system shall …" acceptance criteria with the product owner.
+- Confirm the product does not use AI (currently an assumption).
 
 ## Detail
 
@@ -42,11 +47,11 @@
 - Unknowns: Which regulations apply (not assessed).
 - Founder consequence: Do not put real people's sensitive information in until a qualified person has reviewed it.
 
-### Quality and release engineering — REQUIRED
+### Quality and release engineering — OPEN QUESTION
 
-- Basis: 9 acceptance criteria locked; no evidence yet.
-- Unknowns: Nothing is built, so there is no evidence yet.
-- Founder consequence: You have a checklist (VAT_UAT) to try yourself before anyone calls it done.
+- Basis: 5 locked acceptance criteria; 4 draft verification candidate(s) not yet testable; no evidence yet.
+- Unknowns: Nothing is built, so there is no evidence yet. VC-01: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-02: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-03: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-04: the expected result, what happens on error, limits (sizes, formats, timing) not defined.
+- Founder consequence: Some of your checks are not precise enough to test yet. Your builder must make them precise with you before calling anything done.
 
 ### Operations and reliability — REQUIRED
 
@@ -60,11 +65,11 @@
 - Unknowns: No provider prices have been checked. All prices are symbols, not numbers. Hosting provider and plan not chosen.
 - Founder consequence: Running costs should be low (hosting and storage only), but this is an assumption — no prices have been checked.
 
-### AI system design and AIOps/LLMOps — NOT APPLICABLE
+### AI system design and AIOps/LLMOps — ASSUMPTION
 
-- Basis: The founder said the product does not use AI.
+- Basis: AI was not mentioned; assumed not used (ASSUMPTION).
 - Unknowns: none recorded.
-- Founder consequence: No AI in the product, so no AI-specific risk.
+- Founder consequence: TheDuck assumes there is no AI in the product. Tell us if that is wrong.
 
 ## FinOps — cost hypothesis (ASSUMPTION)
 
@@ -87,4 +92,4 @@
 
 ## AI system / AIOps note
 
-NOT APPLICABLE — the product does not use AI. Revisit only through an approved Change Proposal.
+AI was not mentioned; assumed not used (ASSUMPTION). No AI note generated. Revisit only through an approved Change Proposal.

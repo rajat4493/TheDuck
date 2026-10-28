@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7 pack=founder file=PRODUCT_PITCH.md -->
-> Made from your locked product definition (version 1, fingerprint `8eefb103c25e`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=founder file=PRODUCT_PITCH.md -->
+> Made from your locked product definition (version 1, fingerprint `908b4794a3ae`). If anything here looks different from what you approved, the locked version wins.
 
 # How to explain ShowNotes AI
 
@@ -27,6 +27,8 @@ Publishing an episode's written material takes under 15 minutes instead of about
 - Posting directly to social media accounts
 - Audio editing
 - Hosting or publishing the podcast
+- Must not use uploaded audio to train AI models.
+- Must not publish, send or act on AI output without the user's approval.
 
 ## Honest status
 

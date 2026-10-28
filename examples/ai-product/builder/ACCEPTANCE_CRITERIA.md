@@ -1,62 +1,68 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7 pack=builder file=ACCEPTANCE_CRITERIA.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=builder file=ACCEPTANCE_CRITERIA.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
-# Acceptance criteria
+# Acceptance criteria and verification candidates
 
-Each criterion needs observed evidence before it may be called VERIFIED. Current evidence: none — nothing is built.
+## LOCKED ACCEPTANCE CRITERIA
 
-## AC-01
+Explicit, testable commitments approved by the product owner at lock. Each needs observed evidence before it may be called VERIFIED. Current evidence: none — nothing is built.
 
-- **Statement:** Main journey step 1 works for Independent podcasters who publish weekly and edit their own shows: "Upload an episode audio file".
-- **How to check:** Acting as Independent podcasters who publish weekly and edit their own shows, perform "Upload an episode audio file" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
+### AC-01
 
-## AC-02
-
-- **Statement:** Main journey step 2 works for Independent podcasters who publish weekly and edit their own shows: "Get a draft of show notes, chapter markers and three social posts".
-- **How to check:** Acting as Independent podcasters who publish weekly and edit their own shows, perform "Get a draft of show notes, chapter markers and three social posts" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
-
-## AC-03
-
-- **Statement:** Main journey step 3 works for Independent podcasters who publish weekly and edit their own shows: "Review and edit the AI's result before it is used or shared".
-- **How to check:** Acting as Independent podcasters who publish weekly and edit their own shows, perform "Review and edit the AI's result before it is used or shared" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
-
-## AC-04
-
-- **Statement:** Main journey step 4 works for Independent podcasters who publish weekly and edit their own shows: "Copy the final text into their podcast host and social accounts".
-- **How to check:** Acting as Independent podcasters who publish weekly and edit their own shows, perform "Copy the final text into their podcast host and social accounts" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
-
-## AC-05
-
-- **Statement:** Protection holds — the product never does this: "Use uploaded audio to train AI models".
-- **How to check:** Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.
+- **Statement:** When any user or process attempts to use uploaded audio to train AI models, the system shall prevent it.
+- **How to check:** Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.
 - **Source:** must_not · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
 
-## AC-06
+### AC-02
 
-- **Statement:** Protection holds — the product never does this: "Publish, send or act on AI output without the user's approval".
-- **How to check:** Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.
+- **Statement:** When any user or process attempts to publish, send or act on AI output without the user's approval, the system shall prevent it.
+- **How to check:** Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.
 - **Source:** must_not · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
 
-## AC-07
+### AC-03
 
-- **Statement:** Done means: Five podcasters use it on a real episode and say they would use it again
-- **How to check:** Show observed evidence (not a claim) that this is true.
+- **Statement:** When the first version is evaluated, the product owner shall be able to observe that: Five podcasters use it on a real episode and say they would use it again.
+- **How to check:** Record the observed result against this statement: what was measured, by whom, and when.
 - **Source:** success · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
 
-## AC-08
+## DRAFT VERIFICATION CANDIDATES — not acceptance criteria
 
-- **Statement:** Done means: The AI cost of one episode stays under the agreed cost limit
-- **How to check:** Show observed evidence (not a claim) that this is true.
-- **Source:** success · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
+Draft verification candidates (VC-…) are NOT acceptance criteria. Before claiming any feature is complete, refine each relevant candidate with the product owner into a testable "When …, the system shall …" criterion (expected result, error behaviour, limits) and get their approval. Do not invent the expected result yourself.
+
+### VC-01 (draft)
+
+- **Locked commitment:** Upload an episode audio file
+- **Draft check:** When the user carries out "Upload an episode audio file", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION
+
+### VC-02 (draft)
+
+- **Locked commitment:** Get a draft of show notes, chapter markers and three social posts
+- **Draft check:** When the user carries out "Get a draft of show notes, chapter markers and three social posts", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION
+
+### VC-03 (draft)
+
+- **Locked commitment:** Review and edit the AI's result before it is used or shared
+- **Draft check:** When the user carries out "Review and edit the AI's result before it is used or shared", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION
+
+### VC-04 (draft)
+
+- **Locked commitment:** Copy the final text into their podcast host and social accounts
+- **Draft check:** When the user carries out "Copy the final text into their podcast host and social accounts", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION
+
+### VC-05 (draft)
+
+- **Locked commitment:** The AI cost of one episode stays under the agreed cost limit
+- **Draft check:** When the first version is evaluated, the product owner shall be able to observe that: The AI cost of one episode stays under the agreed cost limit. [measure not yet defined]
+- **Missing before it is testable:** It depends on "agreed cost limit", which has not been decided.
+- **Status:** OPEN QUESTION — waits on product-owner decision DC-UR-01

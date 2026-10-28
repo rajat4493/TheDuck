@@ -1,69 +1,75 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9 pack=builder file=ACCEPTANCE_CRITERIA.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:c038f4d788b4aa5ff7eb9e27611871e482eb40bdd564bdf8406fe2a1d71f038c pack=builder file=ACCEPTANCE_CRITERIA.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:c038f4d788b4aa5ff7eb9e27611871e482eb40bdd564bdf8406fe2a1d71f038c`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
-# Acceptance criteria
+# Acceptance criteria and verification candidates
 
-Each criterion needs observed evidence before it may be called VERIFIED. Current evidence: none — nothing is built.
+## LOCKED ACCEPTANCE CRITERIA
 
-## AC-01
+Explicit, testable commitments approved by the product owner at lock. Each needs observed evidence before it may be called VERIFIED. Current evidence: none — nothing is built.
 
-- **Statement:** Main journey step 1 works for Patients of one partner physiotherapy clinic who have a home exercise plan: "Patient signs in with an invite from the clinic".
-- **How to check:** Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform "Patient signs in with an invite from the clinic" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
+### AC-01
 
-## AC-02
-
-- **Statement:** Main journey step 2 works for Patients of one partner physiotherapy clinic who have a home exercise plan: "Patient sees today's exercises with instructions".
-- **How to check:** Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform "Patient sees today's exercises with instructions" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
-
-## AC-03
-
-- **Statement:** Main journey step 3 works for Patients of one partner physiotherapy clinic who have a home exercise plan: "Patient marks exercises as done".
-- **How to check:** Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform "Patient marks exercises as done" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
-
-## AC-04
-
-- **Statement:** Main journey step 4 works for Patients of one partner physiotherapy clinic who have a home exercise plan: "Physio changes the plan in the clinic's system and the patient sees the update".
-- **How to check:** Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform "Physio changes the plan in the clinic's system and the patient sees the update" end to end. It completes without help from the builder.
-- **Source:** workflow · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
-- **Evidence:** none yet
-
-## AC-05
-
-- **Statement:** Protection holds — the product never does this: "Show one patient's information to another patient".
-- **How to check:** Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.
+- **Statement:** When any user or process attempts to show one patient's information to another patient, the system shall prevent it.
+- **How to check:** Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.
 - **Source:** must_not · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
 
-## AC-06
+### AC-02
 
-- **Statement:** Protection holds — the product never does this: "Change anything in the clinic's practice management system".
-- **How to check:** Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.
+- **Statement:** When any user or process attempts to change anything in the clinic's practice management system, the system shall prevent it.
+- **How to check:** Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.
 - **Source:** must_not · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
 
-## AC-07
+### AC-03
 
-- **Statement:** Protection holds — the product never does this: "Use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then)".
-- **How to check:** Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.
+- **Statement:** When any user or process attempts to use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then), the system shall prevent it.
+- **How to check:** Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.
 - **Source:** must_not · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
 
-## AC-08
+### AC-04
 
-- **Statement:** Done means: Ten pilot patients use it for four weeks
-- **How to check:** Show observed evidence (not a claim) that this is true.
+- **Statement:** When the first version is evaluated, the product owner shall be able to observe that: Ten pilot patients use it for four weeks.
+- **How to check:** Record the observed result against this statement: what was measured, by whom, and when.
 - **Source:** success · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
 
-## AC-09
+### AC-05
 
-- **Statement:** Done means: The partner clinic confirms the plans shown match their system
-- **How to check:** Show observed evidence (not a claim) that this is true.
+- **Statement:** When the first version is evaluated, the product owner shall be able to observe that: The partner clinic confirms the plans shown match their system.
+- **How to check:** Record the observed result against this statement: what was measured, by whom, and when.
 - **Source:** success · **Provenance:** THEDUCK-SUGGESTED + HUMAN-APPROVED
 - **Evidence:** none yet
+
+## DRAFT VERIFICATION CANDIDATES — not acceptance criteria
+
+Draft verification candidates (VC-…) are NOT acceptance criteria. Before claiming any feature is complete, refine each relevant candidate with the product owner into a testable "When …, the system shall …" criterion (expected result, error behaviour, limits) and get their approval. Do not invent the expected result yourself.
+
+### VC-01 (draft)
+
+- **Locked commitment:** Patient signs in with an invite from the clinic
+- **Draft check:** When the user carries out "Patient signs in with an invite from the clinic", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION
+
+### VC-02 (draft)
+
+- **Locked commitment:** Patient sees today's exercises with instructions
+- **Draft check:** When the user carries out "Patient sees today's exercises with instructions", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION
+
+### VC-03 (draft)
+
+- **Locked commitment:** Patient marks exercises as done
+- **Draft check:** When the user carries out "Patient marks exercises as done", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION
+
+### VC-04 (draft)
+
+- **Locked commitment:** Physio changes the plan in the clinic's system and the patient sees the update
+- **Draft check:** When the user carries out "Physio changes the plan in the clinic's system and the patient sees the update", the system shall [expected observable result — not yet defined].
+- **Missing before it is testable:** the expected result; what happens on error; limits (sizes, formats, timing)
+- **Status:** OPEN QUESTION

@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7 pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
-> Made from your locked product definition (version 1, fingerprint `8eefb103c25e`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
+> Made from your locked product definition (version 1, fingerprint `908b4794a3ae`). If anything here looks different from what you approved, the locked version wins.
 
 # What you are building
 
@@ -28,8 +28,8 @@ Publishing an episode's written material takes under 15 minutes instead of about
 
 ## Things it must never do
 
-- Use uploaded audio to train AI models
-- Publish, send or act on AI output without the user's approval
+- Must not use uploaded audio to train AI models.
+- Must not publish, send or act on AI output without the user's approval.
 
 ## How you will know it is done
 
@@ -45,4 +45,22 @@ Publishing an episode's written material takes under 15 minutes instead of about
 
 ## Still waiting for you
 
-Nothing is waiting for your decision right now.
+### Decision needed: Set the maximum acceptable AI cost per episode.
+
+- **Why it matters:** Your definition of done says "The AI cost of one episode stays under the agreed cost limit", but no limit has been set. Until you set one, this check cannot be measured, so it cannot be used to decide whether the product is done — and nobody can warn you before costs run over.
+- **Options:** Set a maximum amount per episode now (The check becomes measurable and a spending alert can be set.) · Remove this check (Cost stops being part of "done".)
+- **TheDuck recommends:** Set a maximum amount per episode now. You can change it later through a Change Proposal.
+- **If you leave it for now:** This check stays unmeasurable and is not treated as an acceptance criterion. Builders must not pick a number for you.
+
+
+## Still open for your builder or a professional
+
+You do not need to answer these yourself, but they must be settled before anyone calls the product done.
+
+- Which specific service or provider will be used for: "A speech-to-text and AI writing service — to transcribe the episode and draft the text"? — The choice affects cost, privacy terms and reliability. A builder or professional proposes options; you approves.
+- Estimate how often one active person will use the AI feature each month. — AI costs money every time it runs. Without an estimate there is no cost model; treat any estimate as an assumption until real usage is measured.
+- 5 of your checks are not precise enough to test yet (VC-01, VC-02, VC-03, VC-04, VC-05). Your builder must agree the exact expected result with you before calling any of them done.
+
+## What TheDuck assumed (tell us if any of this is wrong)
+
+TheDuck did not assume anything that you did not tell it.

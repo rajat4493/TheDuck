@@ -1,47 +1,47 @@
 {
   "projectId": "prj-0001",
   "lockVersion": 1,
-  "lockFingerprint": "sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7",
+  "lockFingerprint": "sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d",
   "files": [
     {
       "name": "LOCKED_INTENT.md",
-      "sha256": "sha256:49457901a7058fb22049bc30776b4446d2f5ee6909dd42803af311cb7da28de1"
+      "sha256": "sha256:d5d50e3a7e0601a3b393f1f514ae460d3dd36953eea48d27f0c0c875b75020a0"
     },
     {
       "name": "JTBD.md",
-      "sha256": "sha256:400c317ad7cd52ccec930b13aad57fd54763d76957d9b0553bf5bd498e66fbb8"
+      "sha256": "sha256:25e0dc63f53863db28cdb1fcf2564bf55cdd7733eeb19a2c600142cbb8475b04"
     },
     {
       "name": "SCOPE.md",
-      "sha256": "sha256:bac7304a40153bef765b3997862e723c516ce36e9aab45f15393a000a473aedf"
+      "sha256": "sha256:c58d76b1a1e0053913d7d367075d1e422e3ccfc4c0ffe82f7329fb43814c732e"
     },
     {
       "name": "USER_FLOWS.md",
-      "sha256": "sha256:4c89c981c5c2dad9a4ec78270d1ba1b80c8831df2261b5ac7a869303ee7e1134"
+      "sha256": "sha256:a17d4d2fa7306f2a17153e8ede8b88f1295b98b1b10bb4577e2992bee2b6c8c7"
     },
     {
       "name": "ACCEPTANCE_CRITERIA.md",
-      "sha256": "sha256:44665f4a27948d9b8e670ec36fa35bc80e9d2bc01c7ab2aa13db41abf76fa141"
+      "sha256": "sha256:f4e3ea0af465524fa8e2b222e7c8315da31b95c92703e577302b04e9afb43c9f"
     },
     {
       "name": "CONSTRAINTS.md",
-      "sha256": "sha256:71e315e7316e9ce1b8b8ddde4841ecfc4041bea1fb4785849608859e43f86ae2"
+      "sha256": "sha256:720bc9898a4b3ab5c7641a80e75f7b9615260a1d0c82f67457f9b5ae1b6532d1"
     },
     {
       "name": "MILESTONES.md",
-      "sha256": "sha256:ec1012df52b75aa2738eeacee76e74be5dfca7fc790154cf624ca88521e42dd1"
+      "sha256": "sha256:4a667f8b01f648821e82b9c5713734e932e1000933435e3b337bdf84be2f31a9"
     },
     {
       "name": "VERIFICATION_EXPECTATIONS.md",
-      "sha256": "sha256:ff16da8841622e0645ad5edbeffe8387ef40d577d0130e560b67c331869b0a42"
+      "sha256": "sha256:bc7baf8c8cc68e3a8f20b6dd5e333fb963fe64e287d5c3f2398554f889b38430"
     },
     {
       "name": "HANDOFF.md",
-      "sha256": "sha256:2cbdb0ccf3fc0cd58e513d53f19b27f6a0487040d856ef5a271bd12d384d37d8"
+      "sha256": "sha256:5b487b5c8452523b269fa811e3afe1188539a6e7b6419188f97c6d70e0b91ad1"
     },
     {
       "name": "LOCK.json",
-      "sha256": "sha256:c2efdcbb0e8f555ad8cb58bf0cd245d0d80bc06a92bfb1f0d0dcf3f904587b4c"
+      "sha256": "sha256:061ff67b04411d7df0d8184fb88902a9815a18bf6327270fd02a8f8cba8c2cc8"
     }
   ]
 }

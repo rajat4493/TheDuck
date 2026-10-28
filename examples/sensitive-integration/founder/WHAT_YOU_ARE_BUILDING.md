@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9 pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
-> Made from your locked product definition (version 1, fingerprint `01541571b98b`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:c038f4d788b4aa5ff7eb9e27611871e482eb40bdd564bdf8406fe2a1d71f038c pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
+> Made from your locked product definition (version 1, fingerprint `c038f4d788b4`). If anything here looks different from what you approved, the locked version wins.
 
 # What you are building
 
@@ -29,9 +29,9 @@ Patients follow their plan correctly between appointments and stop relying on pa
 
 ## Things it must never do
 
-- Show one patient's information to another patient
-- Change anything in the clinic's practice management system
-- Use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then)
+- Must not show one patient's information to another patient.
+- Must not change anything in the clinic's practice management system.
+- Must not use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then).
 
 ## How you will know it is done
 
@@ -42,9 +42,19 @@ Patients follow their plan correctly between appointments and stop relying on pa
 
 - This is a real product that people will rely on.
 - It holds sensitive or regulated information.
-- It does not use AI.
+- TheDuck assumes it does not use AI (not confirmed).
 - It connects to: The clinic's practice management system — the source of each patient's exercise plan.
 
 ## Still waiting for you
 
-Nothing is waiting for your decision right now.
+No decisions are waiting for you right now, but some questions are still open for your builder or a professional — see below.
+
+## Still open for your builder or a professional
+
+You do not need to answer these yourself, but they must be settled before anyone calls the product done.
+
+- 4 of your checks are not precise enough to test yet (VC-01, VC-02, VC-03, VC-04). Your builder must agree the exact expected result with you before calling any of them done.
+
+## What TheDuck assumed (tell us if any of this is wrong)
+
+- TheDuck assumes the product does not use AI, because AI was not mentioned.

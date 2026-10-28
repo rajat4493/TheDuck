@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7 pack=professional file=DELIVERY_READINESS.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=professional file=DELIVERY_READINESS.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
 # Delivery profile and readiness matrix
 
@@ -7,21 +7,27 @@
 
 | Workstream | Status | Why it matters | Next professional action |
 |---|---|---|---|
-| Product and UX | REQUIRED | The 4-step main journey must be easy for Independent podcasters who publish weekly and edit their own shows. | Turn the 4-step main journey into screen flows and watch 3–5 real Independent podcasters who publish weekly and edit their own shows try them. |
+| Product and UX | OPEN QUESTION | The 4-step main journey must be easy for the target user. | Turn the 4-step main journey into screen flows and watch 3–5 people from the target group try them. |
 | Solution architecture | REQUIRED | This is a pilot with a small number of real users; the technical setup must match that. | Write an ADR covering hosting, data storage, backups, environments and how integrations connect. |
-| Data and integrations | REQUIRED | The product depends on outside services it does not control. | Confirm access, limits, terms and costs for: A speech-to-text and AI writing service — to transcribe the episode and draft the text. |
+| Data and integrations | OPEN QUESTION | The product depends on outside services it does not control. | Confirm the provider, access, limits, terms and costs for: A speech-to-text and AI writing service — to transcribe the episode and draft the text. |
 | Security and privacy | REQUIRED | Any product with accounts or personal details can leak them. | Basic protections: sign-in, access limits, a privacy notice and deletion on request. |
-| Quality and release engineering | REQUIRED | Without evidence per acceptance criterion, "done" is just a claim. | Automate checks for the 8 acceptance criteria and record evidence per criterion. |
+| Quality and release engineering | OPEN QUESTION | Without precise, testable criteria and evidence per criterion, "done" is just a claim. | Refine the 5 draft verification candidate(s) with the product owner into testable criteria, then automate checks for all acceptance criteria and record evidence per criterion. |
 | Operations and reliability | ASSUMPTION | Someone has to notice and fix problems when real people depend on it. | Add error logging and a simple way for pilot users to report problems. |
-| FinOps / cost model | REQUIRED | Costs that grow with use can surprise you after launch. | Replace the symbolic cost model with verified provider prices (record source and date) and set a spending alert. |
+| FinOps / cost model | OPEN QUESTION | Costs that grow with use can surprise you after launch. | Replace the symbolic cost model with verified provider prices (record source and date) and set a spending alert. |
 | AI system design and AIOps/LLMOps | REQUIRED | AI can be wrong while sounding confident, and every call costs money. | Define AI jobs, provider choice behind an interface, an evaluation set, failure fallback and privacy-safe logging. |
+
+## Open professional actions
+
+- Which specific service or provider will be used for: "A speech-to-text and AI writing service — to transcribe the episode and draft the text"?
+- Estimate how often one active person will use the AI feature each month.
+- Refine 5 draft verification candidate(s) (VC-01, VC-02, VC-03, VC-04, VC-05) into "When …, the system shall …" acceptance criteria with the product owner.
 
 ## Detail
 
-### Product and UX — REQUIRED
+### Product and UX — OPEN QUESTION
 
-- Basis: Always required.
-- Unknowns: No one has tried the journey yet.
+- Basis: 1 product decision(s) still open.
+- Unknowns: No one has tried the journey yet. Set the maximum acceptable AI cost per episode.
 - Founder consequence: Nobody has tried the journey yet. Watching a few real people use it is the cheapest way to find problems.
 
 ### Solution architecture — REQUIRED
@@ -30,9 +36,9 @@
 - Unknowns: Stack and hosting not chosen.
 - Founder consequence: Real people will use it, so how it is hosted and backed up matters.
 
-### Data and integrations — REQUIRED
+### Data and integrations — OPEN QUESTION
 
-- Basis: Holds personal information and/or depends on connected services.
+- Basis: A connected service, its provider, its failure behaviour or the kind of data held is still undecided.
 - Unknowns: Whether "A speech-to-text and AI writing service — to transcribe the episode and draft the text" offers the access needed (not checked).
 - Founder consequence: It depends on "A speech-to-text and AI writing service — to transcribe the episode and draft the text". If that changes or goes down, your product is affected.
 
@@ -42,11 +48,11 @@
 - Unknowns: none recorded.
 - Founder consequence: It stores people's personal details, so it needs basic protection and a privacy notice.
 
-### Quality and release engineering — REQUIRED
+### Quality and release engineering — OPEN QUESTION
 
-- Basis: 8 acceptance criteria locked; no evidence yet.
-- Unknowns: Nothing is built, so there is no evidence yet.
-- Founder consequence: You have a checklist (VAT_UAT) to try yourself before anyone calls it done.
+- Basis: 3 locked acceptance criteria; 5 draft verification candidate(s) not yet testable; no evidence yet.
+- Unknowns: Nothing is built, so there is no evidence yet. VC-01: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-02: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-03: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-04: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-05: It depends on "agreed cost limit", which has not been decided. not defined.
+- Founder consequence: Some of your checks are not precise enough to test yet. Your builder must make them precise with you before calling anything done.
 
 ### Operations and reliability — ASSUMPTION
 
@@ -54,10 +60,10 @@
 - Unknowns: Who responds to problems (not decided).
 - Founder consequence: Pilot users need a way to tell you when something breaks.
 
-### FinOps / cost model — REQUIRED
+### FinOps / cost model — OPEN QUESTION
 
-- Basis: Uses AI and/or will run in production; costs need a model and limits.
-- Unknowns: No provider prices have been checked. All prices are symbols, not numbers. Hosting provider and plan not chosen. T_in / T_out (tokens per request) not measured. P_in / P_out (price per token) not verified from official provider pricing. Founder's usage estimate is "base" — an ASSUMPTION until real usage is observed.
+- Basis: A cost limit or usage estimate is still undecided.
+- Unknowns: No provider prices have been checked. All prices are symbols, not numbers. Hosting provider and plan not chosen. Founder cost limit not set: Set the maximum acceptable AI cost per episode. (OPEN QUESTION) T_in / T_out (tokens per request) not measured. P_in / P_out (price per token) not verified from official provider pricing. Usage per person not estimated yet (OPEN QUESTION); scenarios below are placeholders.
 - Founder consequence: AI costs money every time it runs, so your running cost grows with use. Nobody knows the real number yet; set a spending limit before inviting users.
 
 ### AI system design and AIOps/LLMOps — REQUIRED
@@ -83,10 +89,11 @@
 - Unknowns:
   - No provider prices have been checked. All prices are symbols, not numbers.
   - Hosting provider and plan not chosen.
+  - Founder cost limit not set: Set the maximum acceptable AI cost per episode. (OPEN QUESTION)
   - T_in / T_out (tokens per request) not measured.
   - P_in / P_out (price per token) not verified from official provider pricing.
-  - Founder's usage estimate is "base" — an ASSUMPTION until real usage is observed.
-- Guardrail: Cap AI requests per user at the high scenario (200/month) and log tokens per request from day one.
+  - Usage per person not estimated yet (OPEN QUESTION); scenarios below are placeholders.
+- Guardrail: Use the founder's maximum acceptable cost (once set) as a hard limit per unit; cap AI requests per user and log tokens per request from day one.
 - Future alert threshold: Alert when monthly AI spend exceeds 1.5 × the base scenario, once real prices are verified.
 
 ## AI system / AIOps note

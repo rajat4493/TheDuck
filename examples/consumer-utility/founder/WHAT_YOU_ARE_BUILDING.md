@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:c18ef76142175bb618e17b826e291cc1dcc51533ae1c012a57db31b9565ceddb pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
-> Made from your locked product definition (version 1, fingerprint `c18ef7614217`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:5fabde37258c5beeab07abc4fc812eabec1a559cb44521e82fc0ed599bb6a1b7 pack=founder file=WHAT_YOU_ARE_BUILDING.md -->
+> Made from your locked product definition (version 1, fingerprint `5fabde37258c`). If anything here looks different from what you approved, the locked version wins.
 
 # What you are building
 
@@ -28,7 +28,7 @@ They throw away less food because they get a nudge the day before something expi
 
 ## Things it must never do
 
-- Send more than one reminder per day
+- Must not send more than one reminder per day.
 
 ## How you will know it is done
 
@@ -37,10 +37,21 @@ They throw away less food because they get a nudge the day before something expi
 ## What kind of product this is
 
 - This is a demo to show people (not for real use yet).
-- It holds no personal information.
-- It does not use AI.
-- It does not connect to other services.
+- TheDuck assumes it holds no sensitive or regulated information (not confirmed).
+- TheDuck assumes it does not use AI (not confirmed).
+- No connected services have been named.
 
 ## Still waiting for you
 
-Nothing is waiting for your decision right now.
+No decisions are waiting for you right now, but some questions are still open for your builder or a professional — see below.
+
+## Still open for your builder or a professional
+
+You do not need to answer these yourself, but they must be settled before anyone calls the product done.
+
+- 4 of your checks are not precise enough to test yet (VC-01, VC-02, VC-03, VC-04). Your builder must agree the exact expected result with you before calling any of them done.
+
+## What TheDuck assumed (tell us if any of this is wrong)
+
+- TheDuck assumes the product does not use AI, because AI was not mentioned.
+- TheDuck assumes it holds no sensitive or regulated information (such as health, money or children's data), because nothing said so. It may still hold basic personal details such as names or emails.

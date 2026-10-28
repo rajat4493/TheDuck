@@ -1,9 +1,22 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9 pack=founder file=FOUNDER_TECH_NOTES.md -->
-> Made from your locked product definition (version 1, fingerprint `01541571b98b`). If anything here looks different from what you approved, the locked version wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:c038f4d788b4aa5ff7eb9e27611871e482eb40bdd564bdf8406fe2a1d71f038c pack=founder file=FOUNDER_TECH_NOTES.md -->
+> Made from your locked product definition (version 1, fingerprint `c038f4d788b4`). If anything here looks different from what you approved, the locked version wins.
 
 # What you should know as the owner
 
 These notes turn the professional checklist into what it means for you. Most important first.
+
+### Checking it does what you approved — Still undecided (OPEN QUESTION)
+
+Some of your checks are not precise enough to test yet. Your builder must make them precise with you before calling anything done.
+
+<details><summary>Technical detail</summary>
+
+- Workstream: Quality and release engineering
+- Why this status: 5 locked acceptance criteria; 4 draft verification candidate(s) not yet testable; no evidence yet.
+- Next professional action: Refine the 4 draft verification candidate(s) with the product owner into testable criteria, then automate checks for all acceptance criteria and record evidence per criterion.
+- Unknowns: Nothing is built, so there is no evidence yet. VC-01: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-02: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-03: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-04: the expected result, what happens on error, limits (sizes, formats, timing) not defined.
+
+</details>
 
 ### The experience for your users — Needs work before real use (REQUIRED)
 
@@ -13,7 +26,7 @@ Nobody has tried the journey yet. Watching a few real people use it is the cheap
 
 - Workstream: Product and UX
 - Why this status: Always required.
-- Next professional action: Turn the 4-step main journey into screen flows and watch 3–5 real Patients of one partner physiotherapy clinic who have a home exercise plan try them.
+- Next professional action: Turn the 4-step main journey into screen flows and watch 3–5 people from the target group try them.
 - Unknowns: No one has tried the journey yet.
 
 </details>
@@ -39,7 +52,7 @@ It depends on "The clinic's practice management system — the source of each pa
 
 - Workstream: Data and integrations
 - Why this status: Holds personal information and/or depends on connected services.
-- Next professional action: Confirm access, limits, terms and costs for: The clinic's practice management system — the source of each patient's exercise plan.
+- Next professional action: Confirm the provider, access, limits, terms and costs for: The clinic's practice management system — the source of each patient's exercise plan.
 - Unknowns: Whether "The clinic's practice management system — the source of each patient's exercise plan" offers the access needed (not checked).
 
 </details>
@@ -54,19 +67,6 @@ Do not put real people's sensitive information in until a qualified person has r
 - Why this status: Handles sensitive or regulated information.
 - Next professional action: A qualified security/privacy reviewer assesses data handling and which regulations apply before any real data is used.
 - Unknowns: Which regulations apply (not assessed).
-
-</details>
-
-### Checking it does what you approved — Needs work before real use (REQUIRED)
-
-You have a checklist (VAT_UAT) to try yourself before anyone calls it done.
-
-<details><summary>Technical detail</summary>
-
-- Workstream: Quality and release engineering
-- Why this status: 9 acceptance criteria locked; no evidence yet.
-- Next professional action: Automate checks for the 9 acceptance criteria and record evidence per criterion.
-- Unknowns: Nothing is built, so there is no evidence yet.
 
 </details>
 
@@ -96,14 +96,14 @@ Running costs should be low (hosting and storage only), but this is an assumptio
 
 </details>
 
-### How the AI part behaves — Not needed for this product right now (NOT APPLICABLE)
+### How the AI part behaves — Assumed, not yet checked (ASSUMPTION)
 
-No AI in the product, so no AI-specific risk.
+TheDuck assumes there is no AI in the product. Tell us if that is wrong.
 
 <details><summary>Technical detail</summary>
 
 - Workstream: AI system design and AIOps/LLMOps
-- Why this status: The founder said the product does not use AI.
+- Why this status: AI was not mentioned; assumed not used (ASSUMPTION).
 - Next professional action: None unless AI is added through an approved Change Proposal.
 - Unknowns: none recorded.
 

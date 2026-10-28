@@ -1,5 +1,5 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:c18ef76142175bb618e17b826e291cc1dcc51533ae1c012a57db31b9565ceddb pack=professional file=DELIVERY_READINESS.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:c18ef76142175bb618e17b826e291cc1dcc51533ae1c012a57db31b9565ceddb`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:5fabde37258c5beeab07abc4fc812eabec1a559cb44521e82fc0ed599bb6a1b7 pack=professional file=DELIVERY_READINESS.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:5fabde37258c5beeab07abc4fc812eabec1a559cb44521e82fc0ed599bb6a1b7`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
 # Delivery profile and readiness matrix
 
@@ -7,14 +7,20 @@
 
 | Workstream | Status | Why it matters | Next professional action |
 |---|---|---|---|
-| Product and UX | REQUIRED | The 4-step main journey must be easy for Busy home cooks who do one big weekly shop. | Turn the 4-step main journey into screen flows and watch 3–5 real Busy home cooks who do one big weekly shop try them. |
+| Product and UX | REQUIRED | The 4-step main journey must be easy for the target user. | Turn the 4-step main journey into screen flows and watch 3–5 people from the target group try them. |
 | Solution architecture | REQUIRED | This is a demo to show people (not for real use yet); the technical setup must match that. | Choose the simplest stack and hosting that can show the main journey; record the choice in an ADR. |
 | Data and integrations | ASSUMPTION | Even simple data needs a clear home and a way to recover it. | Define the data the product stores and where it lives. |
-| Security and privacy | ASSUMPTION | Any product with accounts or personal details can leak them. | Basic hygiene: dependency updates, no secrets in code, HTTPS. |
-| Quality and release engineering | REQUIRED | Without evidence per acceptance criterion, "done" is just a claim. | Automate checks for the 6 acceptance criteria and record evidence per criterion. |
+| Security and privacy | ASSUMPTION | Any product with accounts or personal details can leak them. | Confirm what information it holds; until then apply basic hygiene: dependency updates, no secrets in code, HTTPS. |
+| Quality and release engineering | OPEN QUESTION | Without precise, testable criteria and evidence per criterion, "done" is just a claim. | Refine the 4 draft verification candidate(s) with the product owner into testable criteria, then automate checks for all acceptance criteria and record evidence per criterion. |
 | Operations and reliability | NOT APPLICABLE | Someone has to notice and fix problems when real people depend on it. | Revisit if the demo becomes a pilot. |
 | FinOps / cost model | ASSUMPTION | Costs that grow with use can surprise you after launch. | Replace the symbolic cost model with verified provider prices (record source and date) and set a spending alert. |
-| AI system design and AIOps/LLMOps | NOT APPLICABLE | Only relevant if the product uses AI. | None unless AI is added through an approved Change Proposal. |
+| AI system design and AIOps/LLMOps | ASSUMPTION | Only relevant if the product uses AI. | None unless AI is added through an approved Change Proposal. |
+
+## Open professional actions
+
+- Refine 4 draft verification candidate(s) (VC-01, VC-02, VC-03, VC-04) into "When …, the system shall …" acceptance criteria with the product owner.
+- Confirm what information about people it will hold (currently an assumption).
+- Confirm the product does not use AI (currently an assumption).
 
 ## Detail
 
@@ -32,21 +38,21 @@
 
 ### Data and integrations — ASSUMPTION
 
-- Basis: Founder said no personal information and no connected services; assumed simple data only.
+- Basis: No connected services named and no personal information confirmed; assumed simple data only.
 - Unknowns: Where data is stored (not chosen).
 - Founder consequence: It does not depend on outside services, as far as we know.
 
 ### Security and privacy — ASSUMPTION
 
-- Basis: Founder said no personal information; assumed basic security hygiene only.
-- Unknowns: none recorded.
-- Founder consequence: Low risk — as long as it really never collects personal information.
+- Basis: Not asked: assumed no sensitive or regulated information (ASSUMPTION).
+- Unknowns: What information it holds (not confirmed).
+- Founder consequence: Low risk — as long as it really never collects sensitive information.
 
-### Quality and release engineering — REQUIRED
+### Quality and release engineering — OPEN QUESTION
 
-- Basis: 6 acceptance criteria locked; no evidence yet.
-- Unknowns: Nothing is built, so there is no evidence yet.
-- Founder consequence: You have a checklist (VAT_UAT) to try yourself before anyone calls it done.
+- Basis: 2 locked acceptance criteria; 4 draft verification candidate(s) not yet testable; no evidence yet.
+- Unknowns: Nothing is built, so there is no evidence yet. VC-01: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-02: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-03: the expected result, what happens on error, limits (sizes, formats, timing) not defined. VC-04: the expected result, what happens on error, limits (sizes, formats, timing) not defined.
+- Founder consequence: Some of your checks are not precise enough to test yet. Your builder must make them precise with you before calling anything done.
 
 ### Operations and reliability — NOT APPLICABLE
 
@@ -56,15 +62,15 @@
 
 ### FinOps / cost model — ASSUMPTION
 
-- Basis: No AI and not production: expected low running cost (hosting and storage only) — not measured.
+- Basis: No AI confirmed and not production: expected low running cost (hosting and storage only) — not measured.
 - Unknowns: No provider prices have been checked. All prices are symbols, not numbers. Hosting provider and plan not chosen.
 - Founder consequence: Running costs should be low (hosting and storage only), but this is an assumption — no prices have been checked.
 
-### AI system design and AIOps/LLMOps — NOT APPLICABLE
+### AI system design and AIOps/LLMOps — ASSUMPTION
 
-- Basis: The founder said the product does not use AI.
+- Basis: AI was not mentioned; assumed not used (ASSUMPTION).
 - Unknowns: none recorded.
-- Founder consequence: No AI in the product, so no AI-specific risk.
+- Founder consequence: TheDuck assumes there is no AI in the product. Tell us if that is wrong.
 
 ## FinOps — cost hypothesis (ASSUMPTION)
 
@@ -85,4 +91,4 @@
 
 ## AI system / AIOps note
 
-NOT APPLICABLE — the product does not use AI. Revisit only through an approved Change Proposal.
+AI was not mentioned; assumed not used (ASSUMPTION). No AI note generated. Revisit only through an approved Change Proposal.

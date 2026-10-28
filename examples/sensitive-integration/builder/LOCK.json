@@ -10,83 +10,50 @@
     "jobToBeDone": "HUMAN",
     "productName": "HUMAN",
     "stage": "HUMAN",
-    "targetUser": "HUMAN",
-    "usesAI": "HUMAN"
+    "targetUser": "HUMAN"
   },
-  "fingerprint": "sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9",
+  "fingerprint": "sha256:c038f4d788b4aa5ff7eb9e27611871e482eb40bdd564bdf8406fe2a1d71f038c",
   "intent": {
     "acceptanceCriteria": [
       {
-        "founderCheck": "Try it yourself: Patient signs in with an invite from the clinic. You should manage it on your own, without help.",
-        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Patient signs in with an invite from the clinic\" end to end. It completes without help from the builder.",
+        "founderCheck": "Try to make this happen on purpose: show one patient's information to another patient. It should not be possible.",
+        "howToCheck": "Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.",
         "id": "AC-01",
         "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "workflow",
-        "statement": "Main journey step 1 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Patient signs in with an invite from the clinic\"."
+        "source": "must_not",
+        "statement": "When any user or process attempts to show one patient's information to another patient, the system shall prevent it."
       },
       {
-        "founderCheck": "Try it yourself: Patient sees today's exercises with instructions. You should manage it on your own, without help.",
-        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Patient sees today's exercises with instructions\" end to end. It completes without help from the builder.",
+        "founderCheck": "Try to make this happen on purpose: change anything in the clinic's practice management system. It should not be possible.",
+        "howToCheck": "Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.",
         "id": "AC-02",
         "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "workflow",
-        "statement": "Main journey step 2 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Patient sees today's exercises with instructions\"."
+        "source": "must_not",
+        "statement": "When any user or process attempts to change anything in the clinic's practice management system, the system shall prevent it."
       },
       {
-        "founderCheck": "Try it yourself: Patient marks exercises as done. You should manage it on your own, without help.",
-        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Patient marks exercises as done\" end to end. It completes without help from the builder.",
+        "founderCheck": "Try to make this happen on purpose: use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then). It should not be possible.",
+        "howToCheck": "Deliberately attempt it — as a user and through any background process or connected service. Expected: it is blocked, nothing is changed or shared, and the attempt is recorded as evidence.",
         "id": "AC-03",
         "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "workflow",
-        "statement": "Main journey step 3 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Patient marks exercises as done\"."
+        "source": "must_not",
+        "statement": "When any user or process attempts to use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then), the system shall prevent it."
       },
       {
-        "founderCheck": "Try it yourself: Physio changes the plan in the clinic's system and the patient sees the update. You should manage it on your own, without help.",
-        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Physio changes the plan in the clinic's system and the patient sees the update\" end to end. It completes without help from the builder.",
+        "founderCheck": "Check for yourself: Ten pilot patients use it for four weeks.",
+        "howToCheck": "Record the observed result against this statement: what was measured, by whom, and when.",
         "id": "AC-04",
         "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "workflow",
-        "statement": "Main journey step 4 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Physio changes the plan in the clinic's system and the patient sees the update\"."
+        "source": "success",
+        "statement": "When the first version is evaluated, the product owner shall be able to observe that: Ten pilot patients use it for four weeks."
       },
       {
-        "founderCheck": "Try to make this happen on purpose: \"Show one patient's information to another patient\". It should not be possible.",
-        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
+        "founderCheck": "Check for yourself: The partner clinic confirms the plans shown match their system.",
+        "howToCheck": "Record the observed result against this statement: what was measured, by whom, and when.",
         "id": "AC-05",
         "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "must_not",
-        "statement": "Protection holds — the product never does this: \"Show one patient's information to another patient\"."
-      },
-      {
-        "founderCheck": "Try to make this happen on purpose: \"Change anything in the clinic's practice management system\". It should not be possible.",
-        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
-        "id": "AC-06",
-        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "must_not",
-        "statement": "Protection holds — the product never does this: \"Change anything in the clinic's practice management system\"."
-      },
-      {
-        "founderCheck": "Try to make this happen on purpose: \"Use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then)\". It should not be possible.",
-        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
-        "id": "AC-07",
-        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "must_not",
-        "statement": "Protection holds — the product never does this: \"Use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then)\"."
-      },
-      {
-        "founderCheck": "Check for yourself: Ten pilot patients use it for four weeks",
-        "howToCheck": "Show observed evidence (not a claim) that this is true.",
-        "id": "AC-08",
-        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
         "source": "success",
-        "statement": "Done means: Ten pilot patients use it for four weeks"
-      },
-      {
-        "founderCheck": "Check for yourself: The partner clinic confirms the plans shown match their system",
-        "howToCheck": "Show observed evidence (not a claim) that this is true.",
-        "id": "AC-09",
-        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-        "source": "success",
-        "statement": "Done means: The partner clinic confirms the plans shown match their system"
+        "statement": "When the first version is evaluated, the product owner shall be able to observe that: The partner clinic confirms the plans shown match their system."
       }
     ],
     "aiFailureBehaviour": null,
@@ -179,9 +146,9 @@
       }
     ],
     "targetUser": "Patients of one partner physiotherapy clinic who have a home exercise plan",
-    "usesAI": false
+    "usesAI": null
   },
-  "lockedAt": "2026-10-28T09:00:26.000Z",
+  "lockedAt": "2026-10-28T09:00:15.000Z",
   "lockedBy": {
     "kind": "human",
     "name": "Test Founder",
@@ -189,9 +156,9 @@
   },
   "projectId": "prj-0001",
   "refinement": {
-    "providerId": "theduck-rules-v1",
+    "providerId": "theduck-rules-v2",
     "providerKind": "deterministic-rules",
-    "questionsAsked": 12,
+    "questionsAsked": 6,
     "usedAI": false
   },
   "schemaVersion": 1,

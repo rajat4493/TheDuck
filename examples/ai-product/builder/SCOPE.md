@@ -1,11 +1,11 @@
-<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7 pack=builder file=SCOPE.md -->
-> Rendered by TheDuck from locked product intent **v1** (`sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
+<!-- theduck:rendering project=prj-0001 lock=v1 fingerprint=sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d pack=builder file=SCOPE.md -->
+> Rendered by TheDuck from locked product intent **v1** (`sha256:908b4794a3ae817c09a603936fe645ecaecabd7781cbb4f97c17614dd17c990d`). This file is a rendering, not the source of truth. If it disagrees with the lock, the lock wins.
 
 # Scope
 
 ## In scope
 
-The main journey (see USER_FLOWS.md) and everything needed to meet ACCEPTANCE_CRITERIA.md:
+The main journey (see USER_FLOWS.md) and what is needed to meet ACCEPTANCE_CRITERIA.md:
 
 1. Upload an episode audio file
 2. Get a draft of show notes, chapter markers and three social posts
@@ -20,7 +20,7 @@ The main journey (see USER_FLOWS.md) and everything needed to meet ACCEPTANCE_CR
 
 ## Must never
 
-- Use uploaded audio to train AI models
-- Publish, send or act on AI output without the user's approval
+- Must not use uploaded audio to train AI models.
+- Must not publish, send or act on AI output without the user's approval.
 
 Anything not listed as in scope needs a Change Proposal before you build it.
