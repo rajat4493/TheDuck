@@ -1,0 +1,148 @@
+{
+  "basis": {
+    "kind": "initial-lock"
+  },
+  "fieldProvenance": {
+    "acceptanceCriteria": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+    "dataSensitivity": "HUMAN",
+    "desiredOutcome": "HUMAN",
+    "jobToBeDone": "HUMAN",
+    "productName": "HUMAN",
+    "stage": "HUMAN",
+    "targetUser": "HUMAN",
+    "usesAI": "HUMAN"
+  },
+  "fingerprint": "sha256:c18ef76142175bb618e17b826e291cc1dcc51533ae1c012a57db31b9565ceddb",
+  "intent": {
+    "acceptanceCriteria": [
+      {
+        "founderCheck": "Try it yourself: Add an item and its expiry date in under 10 seconds. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Busy home cooks who do one big weekly shop, perform \"Add an item and its expiry date in under 10 seconds\" end to end. It completes without help from the builder.",
+        "id": "AC-01",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 1 works for Busy home cooks who do one big weekly shop: \"Add an item and its expiry date in under 10 seconds\"."
+      },
+      {
+        "founderCheck": "Try it yourself: See everything sorted by what expires first. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Busy home cooks who do one big weekly shop, perform \"See everything sorted by what expires first\" end to end. It completes without help from the builder.",
+        "id": "AC-02",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 2 works for Busy home cooks who do one big weekly shop: \"See everything sorted by what expires first\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Get a reminder the day before an item expires. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Busy home cooks who do one big weekly shop, perform \"Get a reminder the day before an item expires\" end to end. It completes without help from the builder.",
+        "id": "AC-03",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 3 works for Busy home cooks who do one big weekly shop: \"Get a reminder the day before an item expires\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Mark an item as used or thrown away. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Busy home cooks who do one big weekly shop, perform \"Mark an item as used or thrown away\" end to end. It completes without help from the builder.",
+        "id": "AC-04",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 4 works for Busy home cooks who do one big weekly shop: \"Mark an item as used or thrown away\"."
+      },
+      {
+        "founderCheck": "Try to make this happen on purpose: \"Send more than one reminder per day\". It should not be possible.",
+        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
+        "id": "AC-05",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "must_not",
+        "statement": "Protection holds — the product never does this: \"Send more than one reminder per day\"."
+      },
+      {
+        "founderCheck": "Check for yourself: I use it for two weeks and throw away less food than before",
+        "howToCheck": "Show observed evidence (not a claim) that this is true.",
+        "id": "AC-06",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "success",
+        "statement": "Done means: I use it for two weeks and throw away less food than before"
+      }
+    ],
+    "aiFailureBehaviour": null,
+    "aiUsageEstimate": null,
+    "coreWorkflow": [
+      {
+        "id": "item-0001",
+        "provenance": "HUMAN",
+        "text": "Add an item and its expiry date in under 10 seconds"
+      },
+      {
+        "id": "item-0002",
+        "provenance": "HUMAN",
+        "text": "See everything sorted by what expires first"
+      },
+      {
+        "id": "item-0003",
+        "provenance": "HUMAN",
+        "text": "Get a reminder the day before an item expires"
+      },
+      {
+        "id": "item-0004",
+        "provenance": "HUMAN",
+        "text": "Mark an item as used or thrown away"
+      }
+    ],
+    "dataSensitivity": "none",
+    "desiredOutcome": "They throw away less food because they get a nudge the day before something expires",
+    "integrationFailureBehaviour": null,
+    "integrations": [],
+    "jobToBeDone": "Keep track of what is in the fridge and use food before it expires, without writing lists",
+    "mustNot": [
+      {
+        "id": "item-0008",
+        "provenance": "HUMAN",
+        "text": "Send more than one reminder per day"
+      }
+    ],
+    "openQuestions": [],
+    "outOfScope": [
+      {
+        "id": "item-0005",
+        "provenance": "HUMAN",
+        "text": "Recipe suggestions"
+      },
+      {
+        "id": "item-0006",
+        "provenance": "HUMAN",
+        "text": "Barcode or receipt scanning"
+      },
+      {
+        "id": "item-0007",
+        "provenance": "HUMAN",
+        "text": "Sharing a fridge with other people"
+      }
+    ],
+    "productName": "FreshNudge",
+    "stage": "demo",
+    "successCriteria": [
+      {
+        "id": "item-0009",
+        "provenance": "HUMAN",
+        "text": "I use it for two weeks and throw away less food than before"
+      }
+    ],
+    "targetUser": "Busy home cooks who do one big weekly shop",
+    "usesAI": false
+  },
+  "lockedAt": "2026-10-28T09:00:28.000Z",
+  "lockedBy": {
+    "kind": "human",
+    "name": "Test Founder",
+    "role": "product_owner"
+  },
+  "projectId": "prj-0001",
+  "refinement": {
+    "providerId": "theduck-rules-v1",
+    "providerKind": "deterministic-rules",
+    "questionsAsked": 13,
+    "usedAI": false
+  },
+  "schemaVersion": 1,
+  "version": 1
+}

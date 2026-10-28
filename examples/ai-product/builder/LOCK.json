@@ -1,0 +1,183 @@
+{
+  "basis": {
+    "kind": "initial-lock"
+  },
+  "fieldProvenance": {
+    "acceptanceCriteria": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+    "aiFailureBehaviour": "HUMAN",
+    "aiUsageEstimate": "HUMAN",
+    "dataSensitivity": "HUMAN",
+    "desiredOutcome": "HUMAN",
+    "integrationFailureBehaviour": "HUMAN",
+    "jobToBeDone": "HUMAN",
+    "productName": "HUMAN",
+    "stage": "HUMAN",
+    "targetUser": "HUMAN",
+    "usesAI": "HUMAN"
+  },
+  "fingerprint": "sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7",
+  "intent": {
+    "acceptanceCriteria": [
+      {
+        "founderCheck": "Try it yourself: Upload an episode audio file. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Independent podcasters who publish weekly and edit their own shows, perform \"Upload an episode audio file\" end to end. It completes without help from the builder.",
+        "id": "AC-01",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 1 works for Independent podcasters who publish weekly and edit their own shows: \"Upload an episode audio file\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Get a draft of show notes, chapter markers and three social posts. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Independent podcasters who publish weekly and edit their own shows, perform \"Get a draft of show notes, chapter markers and three social posts\" end to end. It completes without help from the builder.",
+        "id": "AC-02",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 2 works for Independent podcasters who publish weekly and edit their own shows: \"Get a draft of show notes, chapter markers and three social posts\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Review and edit the AI's result before it is used or shared. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Independent podcasters who publish weekly and edit their own shows, perform \"Review and edit the AI's result before it is used or shared\" end to end. It completes without help from the builder.",
+        "id": "AC-03",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 3 works for Independent podcasters who publish weekly and edit their own shows: \"Review and edit the AI's result before it is used or shared\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Copy the final text into their podcast host and social accounts. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Independent podcasters who publish weekly and edit their own shows, perform \"Copy the final text into their podcast host and social accounts\" end to end. It completes without help from the builder.",
+        "id": "AC-04",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 4 works for Independent podcasters who publish weekly and edit their own shows: \"Copy the final text into their podcast host and social accounts\"."
+      },
+      {
+        "founderCheck": "Try to make this happen on purpose: \"Use uploaded audio to train AI models\". It should not be possible.",
+        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
+        "id": "AC-05",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "must_not",
+        "statement": "Protection holds — the product never does this: \"Use uploaded audio to train AI models\"."
+      },
+      {
+        "founderCheck": "Try to make this happen on purpose: \"Publish, send or act on AI output without the user's approval\". It should not be possible.",
+        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
+        "id": "AC-06",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "must_not",
+        "statement": "Protection holds — the product never does this: \"Publish, send or act on AI output without the user's approval\"."
+      },
+      {
+        "founderCheck": "Check for yourself: Five podcasters use it on a real episode and say they would use it again",
+        "howToCheck": "Show observed evidence (not a claim) that this is true.",
+        "id": "AC-07",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "success",
+        "statement": "Done means: Five podcasters use it on a real episode and say they would use it again"
+      },
+      {
+        "founderCheck": "Check for yourself: The AI cost of one episode stays under the agreed cost limit",
+        "howToCheck": "Show observed evidence (not a claim) that this is true.",
+        "id": "AC-08",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "success",
+        "statement": "Done means: The AI cost of one episode stays under the agreed cost limit"
+      }
+    ],
+    "aiFailureBehaviour": "A person reviews and can edit every AI result before it is used or shared.",
+    "aiUsageEstimate": "base",
+    "coreWorkflow": [
+      {
+        "id": "item-0001",
+        "provenance": "HUMAN",
+        "text": "Upload an episode audio file"
+      },
+      {
+        "id": "item-0002",
+        "provenance": "HUMAN",
+        "text": "Get a draft of show notes, chapter markers and three social posts"
+      },
+      {
+        "id": "item-0011",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "text": "Review and edit the AI's result before it is used or shared"
+      },
+      {
+        "id": "item-0003",
+        "provenance": "HUMAN",
+        "text": "Copy the final text into their podcast host and social accounts"
+      }
+    ],
+    "dataSensitivity": "personal",
+    "desiredOutcome": "Publishing an episode's written material takes under 15 minutes instead of about two hours",
+    "integrationFailureBehaviour": "Show a clear message and let people try again later.",
+    "integrations": [
+      {
+        "id": "item-0010",
+        "provenance": "HUMAN",
+        "text": "A speech-to-text and AI writing service — to transcribe the episode and draft the text"
+      }
+    ],
+    "jobToBeDone": "Turn each finished episode into show notes, chapters and promo posts without spending two hours writing them",
+    "mustNot": [
+      {
+        "id": "item-0007",
+        "provenance": "HUMAN",
+        "text": "Use uploaded audio to train AI models"
+      },
+      {
+        "id": "item-0012",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "text": "Publish, send or act on AI output without the user's approval"
+      }
+    ],
+    "openQuestions": [],
+    "outOfScope": [
+      {
+        "id": "item-0004",
+        "provenance": "HUMAN",
+        "text": "Posting directly to social media accounts"
+      },
+      {
+        "id": "item-0005",
+        "provenance": "HUMAN",
+        "text": "Audio editing"
+      },
+      {
+        "id": "item-0006",
+        "provenance": "HUMAN",
+        "text": "Hosting or publishing the podcast"
+      }
+    ],
+    "productName": "ShowNotes AI",
+    "stage": "pilot",
+    "successCriteria": [
+      {
+        "id": "item-0008",
+        "provenance": "HUMAN",
+        "text": "Five podcasters use it on a real episode and say they would use it again"
+      },
+      {
+        "id": "item-0009",
+        "provenance": "HUMAN",
+        "text": "The AI cost of one episode stays under the agreed cost limit"
+      }
+    ],
+    "targetUser": "Independent podcasters who publish weekly and edit their own shows",
+    "usesAI": true
+  },
+  "lockedAt": "2026-10-28T09:00:31.000Z",
+  "lockedBy": {
+    "kind": "human",
+    "name": "Test Founder",
+    "role": "product_owner"
+  },
+  "projectId": "prj-0001",
+  "refinement": {
+    "providerId": "theduck-rules-v1",
+    "providerKind": "deterministic-rules",
+    "questionsAsked": 14,
+    "usedAI": false
+  },
+  "schemaVersion": 1,
+  "version": 1
+}

@@ -1,0 +1,11 @@
+{
+  "projectId": "prj-0001",
+  "lockVersion": 1,
+  "lockFingerprint": "sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9",
+  "files": [
+    {
+      "name": "UNIVERSAL_BUILDER_HANDOVER.md",
+      "sha256": "sha256:ed58da8aac68b40470ca48fac69f7627d059ce23e02a8eeebf05a0ec273f51df"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "projectId": "prj-0001",
+  "lockVersion": 1,
+  "lockFingerprint": "sha256:8eefb103c25e6dc1ecb8e7c2cd3aa5df390a5a13f6007e036b9b1bd5d6f6f7a7",
+  "files": [
+    {
+      "name": "LOCKED_INTENT.md",
+      "sha256": "sha256:49457901a7058fb22049bc30776b4446d2f5ee6909dd42803af311cb7da28de1"
+    },
+    {
+      "name": "JTBD.md",
+      "sha256": "sha256:400c317ad7cd52ccec930b13aad57fd54763d76957d9b0553bf5bd498e66fbb8"
+    },
+    {
+      "name": "SCOPE.md",
+      "sha256": "sha256:bac7304a40153bef765b3997862e723c516ce36e9aab45f15393a000a473aedf"
+    },
+    {
+      "name": "USER_FLOWS.md",
+      "sha256": "sha256:4c89c981c5c2dad9a4ec78270d1ba1b80c8831df2261b5ac7a869303ee7e1134"
+    },
+    {
+      "name": "ACCEPTANCE_CRITERIA.md",
+      "sha256": "sha256:44665f4a27948d9b8e670ec36fa35bc80e9d2bc01c7ab2aa13db41abf76fa141"
+    },
+    {
+      "name": "CONSTRAINTS.md",
+      "sha256": "sha256:71e315e7316e9ce1b8b8ddde4841ecfc4041bea1fb4785849608859e43f86ae2"
+    },
+    {
+      "name": "MILESTONES.md",
+      "sha256": "sha256:ec1012df52b75aa2738eeacee76e74be5dfca7fc790154cf624ca88521e42dd1"
+    },
+    {
+      "name": "VERIFICATION_EXPECTATIONS.md",
+      "sha256": "sha256:ff16da8841622e0645ad5edbeffe8387ef40d577d0130e560b67c331869b0a42"
+    },
+    {
+      "name": "HANDOFF.md",
+      "sha256": "sha256:2cbdb0ccf3fc0cd58e513d53f19b27f6a0487040d856ef5a271bd12d384d37d8"
+    },
+    {
+      "name": "LOCK.json",
+      "sha256": "sha256:c2efdcbb0e8f555ad8cb58bf0cd245d0d80bc06a92bfb1f0d0dcf3f904587b4c"
+    }
+  ]
+}

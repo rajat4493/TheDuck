@@ -1,0 +1,199 @@
+{
+  "basis": {
+    "kind": "initial-lock"
+  },
+  "fieldProvenance": {
+    "acceptanceCriteria": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+    "dataSensitivity": "HUMAN",
+    "desiredOutcome": "HUMAN",
+    "integrationFailureBehaviour": "HUMAN",
+    "jobToBeDone": "HUMAN",
+    "productName": "HUMAN",
+    "stage": "HUMAN",
+    "targetUser": "HUMAN",
+    "usesAI": "HUMAN"
+  },
+  "fingerprint": "sha256:01541571b98bcb10be251c36a45992b29e9dac61172b09a0730a01300978ffa9",
+  "intent": {
+    "acceptanceCriteria": [
+      {
+        "founderCheck": "Try it yourself: Patient signs in with an invite from the clinic. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Patient signs in with an invite from the clinic\" end to end. It completes without help from the builder.",
+        "id": "AC-01",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 1 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Patient signs in with an invite from the clinic\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Patient sees today's exercises with instructions. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Patient sees today's exercises with instructions\" end to end. It completes without help from the builder.",
+        "id": "AC-02",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 2 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Patient sees today's exercises with instructions\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Patient marks exercises as done. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Patient marks exercises as done\" end to end. It completes without help from the builder.",
+        "id": "AC-03",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 3 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Patient marks exercises as done\"."
+      },
+      {
+        "founderCheck": "Try it yourself: Physio changes the plan in the clinic's system and the patient sees the update. You should manage it on your own, without help.",
+        "howToCheck": "Acting as Patients of one partner physiotherapy clinic who have a home exercise plan, perform \"Physio changes the plan in the clinic's system and the patient sees the update\" end to end. It completes without help from the builder.",
+        "id": "AC-04",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "workflow",
+        "statement": "Main journey step 4 works for Patients of one partner physiotherapy clinic who have a home exercise plan: \"Physio changes the plan in the clinic's system and the patient sees the update\"."
+      },
+      {
+        "founderCheck": "Try to make this happen on purpose: \"Show one patient's information to another patient\". It should not be possible.",
+        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
+        "id": "AC-05",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "must_not",
+        "statement": "Protection holds — the product never does this: \"Show one patient's information to another patient\"."
+      },
+      {
+        "founderCheck": "Try to make this happen on purpose: \"Change anything in the clinic's practice management system\". It should not be possible.",
+        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
+        "id": "AC-06",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "must_not",
+        "statement": "Protection holds — the product never does this: \"Change anything in the clinic's practice management system\"."
+      },
+      {
+        "founderCheck": "Try to make this happen on purpose: \"Use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then)\". It should not be possible.",
+        "howToCheck": "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
+        "id": "AC-07",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "must_not",
+        "statement": "Protection holds — the product never does this: \"Use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then)\"."
+      },
+      {
+        "founderCheck": "Check for yourself: Ten pilot patients use it for four weeks",
+        "howToCheck": "Show observed evidence (not a claim) that this is true.",
+        "id": "AC-08",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "success",
+        "statement": "Done means: Ten pilot patients use it for four weeks"
+      },
+      {
+        "founderCheck": "Check for yourself: The partner clinic confirms the plans shown match their system",
+        "howToCheck": "Show observed evidence (not a claim) that this is true.",
+        "id": "AC-09",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "source": "success",
+        "statement": "Done means: The partner clinic confirms the plans shown match their system"
+      }
+    ],
+    "aiFailureBehaviour": null,
+    "aiUsageEstimate": null,
+    "coreWorkflow": [
+      {
+        "id": "item-0001",
+        "provenance": "HUMAN",
+        "text": "Patient signs in with an invite from the clinic"
+      },
+      {
+        "id": "item-0002",
+        "provenance": "HUMAN",
+        "text": "Patient sees today's exercises with instructions"
+      },
+      {
+        "id": "item-0003",
+        "provenance": "HUMAN",
+        "text": "Patient marks exercises as done"
+      },
+      {
+        "id": "item-0004",
+        "provenance": "HUMAN",
+        "text": "Physio changes the plan in the clinic's system and the patient sees the update"
+      }
+    ],
+    "dataSensitivity": "sensitive_or_regulated",
+    "desiredOutcome": "Patients follow their plan correctly between appointments and stop relying on paper handouts",
+    "integrationFailureBehaviour": "Keep working with what is already saved and catch up when the service is back.",
+    "integrations": [
+      {
+        "id": "item-0014",
+        "provenance": "HUMAN",
+        "text": "The clinic's practice management system — the source of each patient's exercise plan"
+      }
+    ],
+    "jobToBeDone": "Know exactly which exercises to do at home and how often, and see changes their physio makes without waiting for the next appointment",
+    "mustNot": [
+      {
+        "id": "item-0009",
+        "provenance": "HUMAN",
+        "text": "Show one patient's information to another patient"
+      },
+      {
+        "id": "item-0010",
+        "provenance": "HUMAN",
+        "text": "Change anything in the clinic's practice management system"
+      },
+      {
+        "id": "item-0013",
+        "provenance": "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        "text": "Use real people's sensitive information before a qualified security and privacy review is done (use made-up test data until then)"
+      }
+    ],
+    "openQuestions": [],
+    "outOfScope": [
+      {
+        "id": "item-0005",
+        "provenance": "HUMAN",
+        "text": "Diagnosis, medical advice or symptom checking"
+      },
+      {
+        "id": "item-0006",
+        "provenance": "HUMAN",
+        "text": "Booking appointments or taking payments"
+      },
+      {
+        "id": "item-0007",
+        "provenance": "HUMAN",
+        "text": "Messaging between patients and physios"
+      },
+      {
+        "id": "item-0008",
+        "provenance": "HUMAN",
+        "text": "Any clinic other than the one partner clinic"
+      }
+    ],
+    "productName": "PhysioPath",
+    "stage": "production",
+    "successCriteria": [
+      {
+        "id": "item-0011",
+        "provenance": "HUMAN",
+        "text": "Ten pilot patients use it for four weeks"
+      },
+      {
+        "id": "item-0012",
+        "provenance": "HUMAN",
+        "text": "The partner clinic confirms the plans shown match their system"
+      }
+    ],
+    "targetUser": "Patients of one partner physiotherapy clinic who have a home exercise plan",
+    "usesAI": false
+  },
+  "lockedAt": "2026-10-28T09:00:26.000Z",
+  "lockedBy": {
+    "kind": "human",
+    "name": "Test Founder",
+    "role": "product_owner"
+  },
+  "projectId": "prj-0001",
+  "refinement": {
+    "providerId": "theduck-rules-v1",
+    "providerKind": "deterministic-rules",
+    "questionsAsked": 12,
+    "usedAI": false
+  },
+  "schemaVersion": 1,
+  "version": 1
+}

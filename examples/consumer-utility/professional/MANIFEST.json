@@ -1,0 +1,15 @@
+{
+  "projectId": "prj-0001",
+  "lockVersion": 1,
+  "lockFingerprint": "sha256:c18ef76142175bb618e17b826e291cc1dcc51533ae1c012a57db31b9565ceddb",
+  "files": [
+    {
+      "name": "PRODUCT_TEAM_HANDOVER.md",
+      "sha256": "sha256:391b1935b572b87a7267e91bd584acef5565fafbed23a6189fcd705e1354f27a"
+    },
+    {
+      "name": "DELIVERY_READINESS.md",
+      "sha256": "sha256:75dd1e3ae59beef629ed136b00a8a47a027e700f48c212c5ca08fe51b65bf0b9"
+    }
+  ]
+}
