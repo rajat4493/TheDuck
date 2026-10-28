@@ -49,7 +49,7 @@ describe.each(ALL_FIXTURES.map((f) => [f.key, f] as const))("Founder pack in pla
     expect(body).toMatch(/\*\*Your next step:\*\*/);
     for (const ac of i.acceptanceCriteria) {
       expect(body).toContain(`**${ac.id}** — ${ac.founderCheck}`);
-      expect(ac.founderCheck).toMatch(/^(Try it yourself|Try to make this happen|Check for yourself)/);
+      expect(ac.founderCheck).toMatch(/^(Try it yourself|Try to make this happen|Check for yourself|You cannot fully check this one yourself)/);
     }
   });
 

@@ -62,7 +62,11 @@ export function profileLines(i: IntentContent): { stage: string; data: string; a
 
 export function lockedAcLines(input: RenderInput): string {
   const acs = input.lock.intent.acceptanceCriteria;
-  return acs.length ? acs.map((ac) => `- **${ac.id}** — ${ac.statement}`).join("\n") : "_None locked yet._";
+  return acs.length
+    ? acs
+        .map((ac) => `- **${ac.id}** — ${ac.statement}${ac.verificationCondition ? `\n  - Condition: ${ac.verificationCondition}` : ""}`)
+        .join("\n")
+    : "_None locked yet._";
 }
 
 export function candidateLines(input: RenderInput): string {
@@ -180,7 +184,7 @@ ${
 
 - **Statement:** ${ac.statement}
 - **How to check:** ${ac.howToCheck}
-- **Source:** ${ac.source} · **Provenance:** ${PROVENANCE_LABEL[ac.provenance]}
+- **Source:** ${ac.source} · **Provenance:** ${PROVENANCE_LABEL[ac.provenance]}${ac.verificationCondition ? `\n- **Verification condition:** ${ac.verificationCondition}\n- **Status:** OPEN QUESTION until the provider is chosen and checked` : ""}
 - **Evidence:** none yet`,
         )
         .join("\n\n")

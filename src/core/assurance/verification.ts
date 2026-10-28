@@ -12,7 +12,7 @@
  */
 import type { AcceptanceCriterion, Draft, IntentContent } from "../model/schema.ts";
 import { forbiddenAction, withPeriod } from "../model/text.ts";
-import { findUnresolvedReferences } from "./open-items.ts";
+import { dependsOnOutsideProvider, findUnresolvedReferences } from "./open-items.ts";
 import type { IntentLike } from "./open-items.ts";
 
 const VAGUE_QUALITY =
@@ -44,6 +44,19 @@ export function deriveAcceptanceCriteria(draft: Draft | IntentContent): Acceptan
   const out: Omit<AcceptanceCriterion, "id">[] = [];
   for (const rule of draft.mustNot) {
     const action = forbiddenAction(rule.text);
+    if (dependsOnOutsideProvider(rule.text, draft)) {
+      out.push({
+        statement: `When any part of the product itself attempts to ${action}, the system shall prevent it.`,
+        howToCheck:
+          "Two parts. (1) Product: deliberately attempt it through the product's own code and its calls to outside services; expected: blocked and recorded. (2) Provider: record which provider was chosen, the contract or data-use terms, and the account settings that rule it out, with the date checked.",
+        founderCheck: `You cannot fully check this one yourself, because it depends on the outside provider you choose. Ask your builder to show you that provider's terms and settings proving it will not ${action}, and when they were checked.`,
+        source: "must_not",
+        provenance: "THEDUCK_SUGGESTED_HUMAN_APPROVED",
+        verificationCondition:
+          "Cannot be marked VERIFIED until the outside provider is chosen and its data-use terms and configuration have been checked and recorded. A test of the product alone does not prove what a provider does with the data.",
+      });
+      continue;
+    }
     out.push({
       statement: `When any user or process attempts to ${action}, the system shall prevent it.`,
       howToCheck:

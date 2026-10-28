@@ -87,7 +87,7 @@ export function waitingForYou(input: RenderInput): string {
 
 function openForOthers(input: RenderInput): string {
   const items = [
-    ...input.open.professional.map((p) => `${p.question} — ${p.whyItMatters.replace(/the product owner/g, "you")}`),
+    ...input.open.professional.map((p) => `${p.question} — ${p.whyItMatters.replace(/the product owner approves/g, "you approve").replace(/the product owner/g, "you")}`),
     ...(input.candidates.length
       ? [
           `${input.candidates.length} of your checks are not precise enough to test yet (${input.candidates.map((c) => c.id).join(", ")}). Your builder must agree the exact expected result with you before calling any of them done.`,
@@ -126,6 +126,18 @@ function kindOfProduct(input: RenderInput): string {
   ].join("\n");
 }
 
+/** Success checks, with any that cannot yet decide "done" clearly labelled. */
+function successLines(input: RenderInput): string[] {
+  const unusable = new Map(input.candidates.filter((c) => c.source === "success").map((c) => [c.commitment, c]));
+  return input.lock.intent.successCriteria.map((s) => {
+    const c = unusable.get(s.text);
+    if (!c) return s.text;
+    return c.blockedBy
+      ? `A success check awaiting your decision: ${s.text} (it cannot be used to decide "done" until you decide — see "Still waiting for you")`
+      : `A success check that is not measurable yet: ${s.text}`;
+  });
+}
+
 function whatYouAreBuilding(input: RenderInput): string {
   const i = input.lock.intent;
   return `${header(input, "founder", "WHAT_YOU_ARE_BUILDING.md", "founder")}
@@ -155,7 +167,7 @@ ${bullets(i.mustNot.map((s) => prohibition(s.text)), "You did not list anything.
 
 ## How you will know it is done
 
-${bullets(i.successCriteria.map((s) => s.text))}
+${bullets(successLines(input))}
 
 ## What kind of product this is
 

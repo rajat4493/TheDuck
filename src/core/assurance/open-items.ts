@@ -12,6 +12,7 @@
  * something nobody has answered yet. They are never mixed.
  */
 import type { Draft } from "../model/schema.ts";
+import { prohibition } from "../model/text.ts";
 
 export type IntentLike = Omit<Draft, "acceptanceCriteria">;
 
@@ -62,6 +63,17 @@ const UNDEFINED_LIMIT = /\b(cost|spend|spending|budget|price)\s+(limit|cap|ceili
 const HAS_NUMBER = /\d|[$€£¥]/;
 const GENERIC_PROVIDER = /^(a|an|some|any)\s+/i;
 const COST_WORD = /\b(cost|costs|spend|spending|price|budget)\b/i;
+
+/** Rules about how data is used that an outside provider could break (training, selling, sharing). */
+const OUTSIDE_DATA_USE = /\btrain(s|ing|ed)?\b|\bmodel[- ]training\b|\bthird[- ]part(y|ies)\b|\bsell\b|\bsold\b|\bshare[sd]?\b.*\bwith\b/i;
+
+/**
+ * True when a must-not rule depends on what an outside provider does with data,
+ * so testing the product alone cannot prove it.
+ */
+export function dependsOnOutsideProvider(ruleText: string, i: IntentLike): boolean {
+  return OUTSIDE_DATA_USE.test(ruleText) && (i.usesAI === true || i.integrations.length > 0);
+}
 
 function textsOf(i: IntentLike): { field: string; text: string }[] {
   const out: { field: string; text: string }[] = [];
@@ -215,6 +227,17 @@ export function deriveOpenItems(i: IntentLike): OpenItems {
       ifDeferred: "It stays listed as an open question. Builders must not invent an answer.",
     });
   }
+  i.mustNot
+    .filter((m) => dependsOnOutsideProvider(m.text, i))
+    .forEach((m, n) =>
+      professional.push({
+        id: `PA-PROVIDER-TERMS-${String(n + 1).padStart(2, "0")}`,
+        question: `Check the chosen provider's data-use terms and settings for this rule: "${prohibition(m.text)}"`,
+        whyItMatters:
+          "TheDuck cannot test or prevent what an outside provider does with data. Until the provider, its contract or data-use terms, and its settings are chosen and checked, this rule cannot be marked as proven.",
+        about: m.text,
+      }),
+    );
   if (i.usesAI === true && i.aiUsageEstimate === null) {
     professional.push({
       id: "PA-AI-USAGE",

@@ -94,6 +94,11 @@ export const AcceptanceCriterion = z.object({
    * candidates (assurance/verification.ts).
    */
   source: z.enum(["must_not", "success", "human"]),
+  /**
+   * Set when the criterion cannot be VERIFIED by testing the product alone,
+   * e.g. it depends on what an outside provider does with data.
+   */
+  verificationCondition: z.string().min(1).optional(),
   provenance: Provenance,
 });
 export type AcceptanceCriterion = z.infer<typeof AcceptanceCriterion>;
