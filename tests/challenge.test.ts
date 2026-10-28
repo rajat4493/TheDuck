@@ -19,8 +19,9 @@ describe("Exit criterion 2 — a challenge question materially changes the locke
     expect(rules(review)).toContain(AI_REVIEW_RULE);
     expect(rules(auto)).not.toContain(AI_REVIEW_RULE);
     expect(done(auto)).toContain(AI_AUTO_SUCCESS);
-    expect(review.intent.acceptanceCriteria.some((a) => a.statement.includes(AI_REVIEW_RULE))).toBe(true);
-    expect(auto.intent.acceptanceCriteria.some((a) => a.statement.includes(AI_REVIEW_RULE))).toBe(false);
+    const reviewAc = "attempts to publish, send or act on AI output without the user's approval";
+    expect(review.intent.acceptanceCriteria.some((a) => a.statement.includes(reviewAc))).toBe(true);
+    expect(auto.intent.acceptanceCriteria.some((a) => a.statement.includes(reviewAc))).toBe(false);
 
     // TheDuck-authored additions keep their provenance.
     const added = review.intent.mustNot.find((m) => m.text === AI_REVIEW_RULE)!;

@@ -8,6 +8,9 @@ import type { LockSnapshot, Project } from "../model/schema.ts";
 import { computeFingerprint } from "../intent-gate/gate.ts";
 import { deriveDeliveryProfile } from "../assurance/readiness.ts";
 import { renderInputFor } from "./common.ts";
+import { prohibition } from "../model/text.ts";
+import { deriveOpenItems } from "../assurance/open-items.ts";
+import { deriveVerificationCandidates } from "../assurance/verification.ts";
 import { checkCoverage, checkHeaders } from "./checks.ts";
 export { anchors, checkCoverage, checkHeaders } from "./checks.ts";
 import type { Pack } from "./common.ts";
@@ -94,19 +97,33 @@ export function checkPackConsistency(packs: PackSet, lock: LockSnapshot): string
   const core = [i.productName, i.targetUser, i.jobToBeDone, i.desiredOutcome];
   const steps = i.coreWorkflow.map((s) => s.text);
   const oos = i.outOfScope.map((s) => s.text);
-  const mn = i.mustNot.map((s) => s.text);
+  const mn = i.mustNot.map((s) => `- ${prohibition(s.text)}`);
   const acIds = i.acceptanceCriteria.map((a) => a.id);
   const acStatements = i.acceptanceCriteria.map((a) => a.statement);
+  const candidates = deriveVerificationCandidates(i);
+  const vcIds = candidates.map((c) => c.id);
+  const vcCommitments = candidates.map((c) => c.commitment);
+  const open = deriveOpenItems(i);
+  const decisions = open.decisions.map((d) => d.decisionNeeded);
+  const professional = open.professional.map((p) => p.question);
+  const assumptions = open.assumptions.map((a) => a.text);
 
   // Founder
   const fw = file(packs.founder, "WHAT_YOU_ARE_BUILDING.md");
-  need("founder/WHAT_YOU_ARE_BUILDING.md", fw, [...core, ...steps, ...oos, ...mn]);
-  need("founder/VAT_UAT.md", file(packs.founder, "VAT_UAT.md"), acIds);
+  need("founder/WHAT_YOU_ARE_BUILDING.md", fw, [...core, ...steps, ...oos, ...mn, ...decisions, ...professional, ...assumptions]);
+  need("founder/CURRENT_OUTCOME.md", file(packs.founder, "CURRENT_OUTCOME.md"), [...decisions, ...professional, ...assumptions]);
+  need("founder/VAT_UAT.md", file(packs.founder, "VAT_UAT.md"), [...acIds, ...vcIds]);
   // Builder
   need("builder/LOCKED_INTENT.md", file(packs.builder, "LOCKED_INTENT.md"), core);
   need("builder/USER_FLOWS.md", file(packs.builder, "USER_FLOWS.md"), steps);
   need("builder/SCOPE.md", file(packs.builder, "SCOPE.md"), [...steps, ...oos, ...mn]);
-  need("builder/ACCEPTANCE_CRITERIA.md", file(packs.builder, "ACCEPTANCE_CRITERIA.md"), [...acIds, ...acStatements]);
+  need("builder/ACCEPTANCE_CRITERIA.md", file(packs.builder, "ACCEPTANCE_CRITERIA.md"), [
+    ...acIds,
+    ...acStatements,
+    ...vcIds,
+    ...vcCommitments,
+  ]);
+  need("builder/CONSTRAINTS.md", file(packs.builder, "CONSTRAINTS.md"), [...decisions, ...professional, ...assumptions]);
   // Professional
   need("professional/PRODUCT_TEAM_HANDOVER.md", file(packs.professional, "PRODUCT_TEAM_HANDOVER.md"), [
     ...core,
@@ -115,6 +132,11 @@ export function checkPackConsistency(packs: PackSet, lock: LockSnapshot): string
     ...mn,
     ...acIds,
     ...acStatements,
+    ...vcIds,
+    ...vcCommitments,
+    ...decisions,
+    ...professional,
+    ...assumptions,
   ]);
   // Universal
   problems.push(...checkCoverage(packs.universal.files.map((f) => f.content).join("\n"), lock, "universal"));

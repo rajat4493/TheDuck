@@ -53,3 +53,7 @@ export const DATA_PLAIN: Record<DataSensitivity, string> = {
   personal: "basic personal details (such as names, emails or accounts)",
   sensitive_or_regulated: "sensitive or regulated information",
 };
+
+export function stagePlain(stage: Stage | null): string {
+  return stage ? STAGE_PLAIN[stage] : "not yet decided (demo, pilot or real product)";
+}

@@ -8,8 +8,10 @@ import type {
   Project,
   ProviderInfo,
 } from "../model/schema.ts";
-import { deriveDecisionCards } from "../assurance/decision-cards.ts";
-import type { DecisionCard } from "../assurance/decision-cards.ts";
+import { deriveOpenItems } from "../assurance/open-items.ts";
+import type { OpenItems } from "../assurance/open-items.ts";
+import { deriveVerificationCandidates } from "../assurance/verification.ts";
+import type { VerificationCandidate } from "../assurance/verification.ts";
 import { deriveDeliveryProfile } from "../assurance/readiness.ts";
 import type { DeliveryProfile } from "../assurance/readiness.ts";
 
@@ -42,7 +44,10 @@ export interface RenderInput {
   readonly provider: ProviderInfo;
   readonly evidence: readonly EvidenceItem[];
   readonly profile: DeliveryProfile;
-  readonly decisions: readonly DecisionCard[];
+  /** Decisions, professional actions, assumptions and unresolved references. */
+  readonly open: OpenItems;
+  /** Draft verification candidates — NOT acceptance criteria. */
+  readonly candidates: readonly VerificationCandidate[];
 }
 
 export function renderInputFor(project: Project, version?: number): RenderInput {
@@ -63,8 +68,20 @@ export function renderInputFor(project: Project, version?: number): RenderInput 
     provider: project.refinement.provider,
     evidence: project.evidence,
     profile: deriveDeliveryProfile(frozen.intent),
-    decisions: deriveDecisionCards(frozen.intent),
+    open: deriveOpenItems(frozen.intent),
+    candidates: deriveVerificationCandidates(frozen.intent),
   });
+}
+
+/** Readiness rows marked ASSUMPTION, minus those already stated as an explicit assumption. */
+export function extraAssumedRows(input: RenderInput): { name: string; founderName: string; basis: string; founderConsequence: string }[] {
+  const ids = new Set(input.open.assumptions.map((a) => a.id));
+  return input.profile.rows.filter(
+    (r) =>
+      r.status === "ASSUMPTION" &&
+      !(r.id === "ai_aiops" && ids.has("A-AI")) &&
+      !(r.id === "security_privacy" && ids.has("A-DATA")),
+  );
 }
 
 export const HEADER_RE = /^<!-- theduck:rendering project=(\S+) lock=v(\d+) fingerprint=(sha256:[0-9a-f]{64}) pack=(\S+) file=(\S+) -->/;

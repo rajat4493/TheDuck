@@ -10,7 +10,10 @@ import { z } from "zod";
 import { LIST_FIELDS, SCALAR_FIELDS } from "../model/schema.ts";
 import type { AskedQuestion, Draft, ProviderInfo } from "../model/schema.ts";
 
-export const MAX_QUESTIONS = 16;
+/** First-session limits (M1.1.1): a short core pass, a few material follow-ups, then the preview. */
+export const MAX_CORE_QUESTIONS = 5;
+export const MAX_FOLLOW_UPS = 3;
+export const MAX_QUESTIONS = MAX_CORE_QUESTIONS + MAX_FOLLOW_UPS;
 
 const ScalarFieldEnum = z.enum(SCALAR_FIELDS);
 const ListFieldEnum = z.enum(LIST_FIELDS);
@@ -50,9 +53,20 @@ const QuestionBase = {
   prompt: z.string().min(1),
   /** Why it matters, in plain English. Shown behind "Why?". */
   reason: z.string().min(1),
-  /** Text stored as an open question if the founder says "not sure yet". */
-  notSureText: z.string().min(1).nullable(),
+  /** "core" = first pass; "follow_up" = only when an answer materially changes the product. */
+  tier: z.enum(["core", "follow_up"]),
+  /** Every question offers "I am not sure yet"; this text becomes a visible open question. */
+  notSureText: z.string().min(1),
 };
+
+export const QuestionPart = z.object({
+  key: z.string().min(1),
+  label: z.string().min(1),
+  kind: z.enum(["text", "list"]),
+  target: z.union([ScalarFieldEnum, ListFieldEnum]),
+  optional: z.boolean(),
+});
+export type QuestionPart = z.infer<typeof QuestionPart>;
 
 export const Question = z.discriminatedUnion("kind", [
   z.object({ ...QuestionBase, kind: z.literal("text"), target: ScalarFieldEnum }),
@@ -61,6 +75,13 @@ export const Question = z.discriminatedUnion("kind", [
     kind: z.literal("list"),
     target: ListFieldEnum,
     minItems: z.number().int().min(0),
+  }),
+  z.object({
+    ...QuestionBase,
+    kind: z.literal("parts"),
+    parts: z.array(QuestionPart).min(2),
+    /** At least one part must be filled in. */
+    requireAny: z.boolean(),
   }),
   z.object({
     ...QuestionBase,

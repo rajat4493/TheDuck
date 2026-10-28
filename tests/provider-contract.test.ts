@@ -25,8 +25,8 @@ function fakeProvider(questions: Question[]): RefinementProvider {
 }
 
 const FAKE_QS: Question[] = [
-  { id: "Q-F1", gap: "target_user", kind: "text", target: "targetUser", prompt: "Who?", reason: "Why.", notSureText: "Who?" },
-  { id: "Q-F2", gap: "core_workflow", kind: "list", target: "coreWorkflow", minItems: 1, prompt: "Steps?", reason: "Why.", notSureText: null },
+  { id: "Q-F1", tier: "core", gap: "target_user", kind: "text", target: "targetUser", prompt: "Who?", reason: "Why.", notSureText: "Who?" },
+  { id: "Q-F2", tier: "core", gap: "core_workflow", kind: "list", target: "coreWorkflow", minItems: 1, prompt: "Steps?", reason: "Why.", notSureText: "Steps?" },
 ];
 
 function contract(name: string, make: () => RefinementProvider, answerFor: (q: Question) => Answer) {
@@ -75,7 +75,9 @@ const genericAnswer = (q: Question): Answer =>
     ? { kind: "text", value: "Someone specific" }
     : q.kind === "list"
       ? { kind: "list", values: q.minItems ? ["One thing"] : [] }
-      : { kind: "choice", value: q.options[0]!.value };
+      : q.kind === "parts"
+        ? { kind: "parts", values: Object.fromEntries(q.parts.map((p) => [p.key, p.kind === "text" ? "Something specific" : ["One thing"]])) }
+        : { kind: "choice", value: q.options[0]!.value };
 
 contract("rules provider", () => rulesProvider, genericAnswer);
 contract("scripted fake provider", () => fakeProvider(FAKE_QS), genericAnswer);
@@ -91,11 +93,12 @@ describe("The gate owns application; a misbehaving provider cannot write intent"
       nextQuestion: () =>
         ({
           id: "Q-BAD",
+          tier: "core",
           gap: "x",
           kind: "choice",
           prompt: "?",
           reason: "?",
-          notSureText: null,
+          notSureText: "?",
           suggested: null,
           options: [
             { value: "a", label: "a", consequence: "a", effects: [{ op: "set", field: "fingerprint", value: "x" }] },

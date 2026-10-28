@@ -33,8 +33,10 @@ import type {
   Provenance,
   ScalarField,
 } from "../model/schema.ts";
-import { MAX_QUESTIONS, Question } from "./provider.ts";
+import { MAX_CORE_QUESTIONS, MAX_FOLLOW_UPS, MAX_QUESTIONS, Question } from "./provider.ts";
 import type { Effect, RefinementProvider } from "./provider.ts";
+import { deriveAcceptanceCriteria } from "../assurance/verification.ts";
+import { deriveOpenItems } from "../assurance/open-items.ts";
 
 export const LOCK_CONFIRMATION_TEXT = "I approve this product intent and want to lock it.";
 
@@ -112,6 +114,20 @@ function newItem(ctx: Ctx, text: string, provenance: Provenance, ref?: string): 
   return { id: ctx.id("item"), text: text.trim(), provenance, ...(ref ? { ref } : {}) };
 }
 
+/** Draft fields a question fills; used to close a "not sure" once they are filled. */
+function questionFields(q: Question): string[] {
+  if (q.kind === "text" || q.kind === "list") return [q.target];
+  if (q.kind === "parts") return q.parts.map((p) => p.target);
+  const sets = q.options.map((o) => new Set(o.effects.filter((e) => e.op === "set").map((e) => e.field as string)));
+  const first = sets[0] ?? new Set<string>();
+  return [...first].filter((f) => sets.every((s) => s.has(f)));
+}
+
+function isFilled(d: Draft, field: string): boolean {
+  const v = (d as Record<string, unknown>)[field];
+  return Array.isArray(v) ? v.length > 0 : v !== null && v !== undefined;
+}
+
 // ── create ──────────────────────────────────────────────────────────────────
 
 export function createProject(
@@ -171,6 +187,19 @@ export function nextQuestion(project: Project, provider: RefinementProvider): Qu
   if (project.refinement.asked.some((a) => a.questionId === q.id)) {
     throw new ProviderContractError(`Provider repeated question ${q.id}.`);
   }
+  const used = project.refinement.asked.filter((a) => a.tier === q.tier).length;
+  const limit = q.tier === "core" ? MAX_CORE_QUESTIONS : MAX_FOLLOW_UPS;
+  if (used >= limit) {
+    throw new ProviderContractError(
+      `Provider asked a ${q.tier} question beyond the first-session limit (${limit}). Remaining detail belongs in the Product Preview.`,
+    );
+  }
+  if (q.kind === "parts") {
+    for (const part of q.parts) {
+      const ok = part.kind === "list" ? isList(part.target) : isScalar(part.target);
+      if (!ok) throw new ProviderContractError(`Question ${q.id} part "${part.key}" targets an incompatible field.`);
+    }
+  }
   return deepFreeze(q);
 }
 
@@ -206,9 +235,31 @@ export function answerQuestion(
   };
 
   if (answer.kind === "not_sure") {
-    if (q.notSureText === null) throw new StateError(`Question ${q.id} needs an answer (it has no "not sure" option).`);
-    p.draft.openQuestions.push(newItem(ctx, q.notSureText, "HUMAN", q.id));
+    const item = newItem(ctx, q.notSureText, "HUMAN", q.id);
+    item.fields = questionFields(q);
+    p.draft.openQuestions.push(item);
     changed.add("openQuestions");
+  } else if (q.kind === "parts") {
+    if (answer.kind !== "parts") throw new StateError(`Question ${q.id} expects an answer for each box.`);
+    let filled = 0;
+    for (const part of q.parts) {
+      const v = answer.values[part.key];
+      if (part.kind === "text") {
+        const text = typeof v === "string" ? v.trim() : "";
+        if (!text) {
+          if (!part.optional) throw new StateError(`Question ${q.id} needs "${part.label}".`);
+          continue;
+        }
+        applyEffect({ op: "set", field: part.target as ScalarField, value: text });
+        filled++;
+      } else {
+        const values = Array.isArray(v) ? v : [];
+        if (values.length === 0 && !part.optional) throw new StateError(`Question ${q.id} needs "${part.label}".`);
+        for (const text of values) applyEffect({ op: "append", field: part.target as ListField, text, authoredBy: "founder" });
+        if (values.length) filled++;
+      }
+    }
+    if (q.requireAny && filled === 0) throw new StateError(`Question ${q.id} needs at least one box filled in, or "not sure yet".`);
   } else if (q.kind === "text") {
     if (answer.kind !== "text") throw new StateError(`Question ${q.id} expects a text answer.`);
     applyEffect({ op: "set", field: q.target, value: answer.value.trim() });
@@ -235,6 +286,7 @@ export function answerQuestion(
 
   const record: AskedQuestion = {
     questionId: q.id,
+    tier: q.tier,
     prompt: q.prompt,
     answer,
     fieldsChanged: [...changed],
@@ -290,6 +342,10 @@ export function editDraft(project: Project, patch: DraftPatch, by: Actor, ctx: C
     }
     fields.push(field);
   }
+  // An open "not sure" closes once every field it was about has been filled in.
+  const open = p.draft.openQuestions;
+  p.draft.openQuestions = open.filter((q) => !(q.fields && q.fields.length > 0 && q.fields.every((f) => isFilled(p.draft, f))));
+  if (p.draft.openQuestions.length !== open.length) fields.push("openQuestions");
   pushEvent(p, ctx, by, "DRAFT_EDITED", `Founder edited the preview: ${fields.join(", ")}.`, { fields });
   return Project.parse(p);
 }
@@ -298,48 +354,19 @@ export function editDraft(project: Project, patch: DraftPatch, by: Actor, ctx: C
 
 const acId = (n: number) => `AC-${String(n + 1).padStart(2, "0")}`;
 
-/** Deterministic acceptance criteria from the journey, protections and success checks. */
-export function deriveAcceptanceCriteria(draft: Draft): AcceptanceCriterion[] {
-  const user = draft.targetUser ?? "the main user";
-  const out: Omit<AcceptanceCriterion, "id">[] = [];
-  draft.coreWorkflow.forEach((step, n) =>
-    out.push({
-      statement: `Main journey step ${n + 1} works for ${user}: "${step.text}".`,
-      howToCheck: `Acting as ${user}, perform "${step.text}" end to end. It completes without help from the builder.`,
-      founderCheck: `Try it yourself: ${step.text}. You should manage it on your own, without help.`,
-      source: "workflow",
-      provenance: "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-    }),
-  );
-  draft.mustNot.forEach((rule) =>
-    out.push({
-      statement: `Protection holds — the product never does this: "${rule.text}".`,
-      howToCheck: "Deliberately try to break this rule. The product prevents it, and the attempt is recorded as evidence.",
-      founderCheck: `Try to make this happen on purpose: "${rule.text}". It should not be possible.`,
-      source: "must_not",
-      provenance: "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-    }),
-  );
-  draft.successCriteria.forEach((s) =>
-    out.push({
-      statement: `Done means: ${s.text}`,
-      howToCheck: "Show observed evidence (not a claim) that this is true.",
-      founderCheck: `Check for yourself: ${s.text}`,
-      source: "success",
-      provenance: "THEDUCK_SUGGESTED_HUMAN_APPROVED",
-    }),
-  );
-  return out.map((ac, n) => ({ id: acId(n), ...ac }));
-}
+export { deriveAcceptanceCriteria };
 
 export interface LockReadiness {
   ready: boolean;
   /** Plain-English things that must be settled before locking. */
   blockers: string[];
-  /** Things left open on purpose. They will be locked as open questions. */
+  /** "Not sure yet" answers. They stay visible and are locked as open questions. */
   deferred: string[];
+  /** Material decisions still waiting for the founder (never hidden). */
+  decisionsWaiting: string[];
 }
 
+/** Only the five core commitments (plus a working name) block a lock. */
 export function lockReadiness(project: Project): LockReadiness {
   const d = project.draft;
   const blockers: string[] = [];
@@ -348,12 +375,15 @@ export function lockReadiness(project: Project): LockReadiness {
   if (!d.jobToBeDone) blockers.push("We still need to know what job it does for them.");
   if (!d.desiredOutcome) blockers.push("We still need to know what will be better for them when it works.");
   if (d.coreWorkflow.length === 0) blockers.push("Describe at least one step of the main journey.");
-  if (d.outOfScope.length === 0) blockers.push("Name at least one thing the first version will not do.");
+  if (d.outOfScope.length + d.mustNot.length === 0)
+    blockers.push("Name at least one thing the first version will not do, or must never do.");
   if (d.successCriteria.length === 0) blockers.push("Say how you will know the first version is good enough.");
-  if (!d.stage) blockers.push("Choose whether this is a demo, a pilot or a real product.");
-  if (!d.dataSensitivity) blockers.push("We still need your decision about what information it holds about people.");
-  if (d.usesAI === null) blockers.push("Say whether the product itself uses AI.");
-  return { ready: blockers.length === 0, blockers, deferred: d.openQuestions.map((i) => i.text) };
+  return {
+    ready: blockers.length === 0,
+    blockers,
+    deferred: d.openQuestions.map((i) => i.text),
+    decisionsWaiting: deriveOpenItems(d).decisions.map((c) => c.decisionNeeded),
+  };
 }
 
 /** The intent that would be locked right now (for the Product Preview). */

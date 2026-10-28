@@ -1,5 +1,8 @@
 /** Header and coverage checks shared by packs and adapters. */
 import type { LockSnapshot } from "../model/schema.ts";
+import { prohibition } from "../model/text.ts";
+import { deriveOpenItems } from "../assurance/open-items.ts";
+import { deriveVerificationCandidates } from "../assurance/verification.ts";
 import { HEADER_RE } from "./common.ts";
 import type { RenderedFile } from "./common.ts";
 
@@ -39,8 +42,10 @@ export function anchors(lock: LockSnapshot): { label: string; line: string }[] {
     { label: "promised outcome", line: `- Promised outcome: ${i.desiredOutcome}` },
     ...i.coreWorkflow.map((s, n) => ({ label: "journey step", line: `${n + 1}. ${s.text}` })),
     ...i.outOfScope.map((s) => ({ label: "out of scope", line: `- ${s.text}` })),
-    ...i.mustNot.map((s) => ({ label: "must never", line: `- ${s.text}` })),
+    ...i.mustNot.map((s) => ({ label: "must never", line: `- ${prohibition(s.text)}` })),
     ...i.acceptanceCriteria.map((a) => ({ label: `acceptance ${a.id}`, line: `- **${a.id}** — ${a.statement}` })),
+    ...deriveVerificationCandidates(i).map((c) => ({ label: `draft candidate ${c.id}`, line: `- **${c.id}** (draft) — ${c.commitment}` })),
+    ...deriveOpenItems(i).decisions.map((d) => ({ label: "open decision", line: `- Product owner decision: ${d.decisionNeeded}` })),
   ];
 }
 

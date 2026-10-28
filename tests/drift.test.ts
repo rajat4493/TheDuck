@@ -152,7 +152,7 @@ describe("Exit criterion 5 — downstream rendering cannot silently alter locked
     it("an invalid proposal is rejected before it reaches the owner", () => {
       const p = refineAndLock(physioPath);
       expect(() =>
-        proposeChange(p, { field: "outOfScope", after: [], reason: "Remove limits.", origin: "THEDUCK_SUGGESTED" }, AGENT, fixedCtx()),
+        proposeChange(p, { field: "coreWorkflow", after: [], reason: "Remove the journey.", origin: "THEDUCK_SUGGESTED" }, AGENT, fixedCtx()),
       ).toThrow(StateError);
     });
 

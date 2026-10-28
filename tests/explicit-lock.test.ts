@@ -53,7 +53,7 @@ describe("Exit criterion 3 — the founder must explicitly lock; nothing is lock
     const r = lockReadiness(p);
     expect(r.ready).toBe(false);
     expect(r.blockers).toContain("We still need to know who the first version is for.");
-    expect(r.blockers).toContain("We still need your decision about what information it holds about people.");
+    expect(r.blockers).toContain("Name at least one thing the first version will not do, or must never do.");
     expect(() => lockIntent(p, { confirmed: true, statement: LOCK_CONFIRMATION_TEXT, by: OWNER }, ctx)).toThrow(
       /Not ready to lock/,
     );

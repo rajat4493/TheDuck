@@ -19,8 +19,8 @@ describe("Exit criterion 1 — three materially different ideas complete the flo
     expect(project.status).toBe("locked");
     expect(lock.version).toBe(1);
     expect(computeFingerprint(lock)).toBe(lock.fingerprint);
-    expect(project.refinement.asked.length).toBeGreaterThanOrEqual(10);
-    expect(project.refinement.asked.length).toBeLessThanOrEqual(16);
+    expect(project.refinement.asked.length).toBeGreaterThanOrEqual(5);
+    expect(project.refinement.asked.length).toBeLessThanOrEqual(8);
 
     const packs = renderAllPacks(project);
     expect(packs.founder.files.map((x) => x.name)).toEqual([...FOUNDER_FILES]);

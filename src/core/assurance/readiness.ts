@@ -7,7 +7,9 @@
  * Nothing here has been reviewed by a qualified professional.
  */
 import type { IntentContent, ReadinessState } from "../model/schema.ts";
-import { STAGE_PLAIN } from "../model/labels.ts";
+import { stagePlain } from "../model/labels.ts";
+import { aiState, dataState, deriveOpenItems } from "./open-items.ts";
+import { deriveVerificationCandidates } from "./verification.ts";
 
 export type WorkstreamId =
   | "product_ux"
@@ -65,6 +67,8 @@ export interface AiDeliveryNote {
 
 export interface DeliveryProfile {
   disclaimer: string;
+  /** Professional detail still to settle — open actions, not founder homework. */
+  openActions: string[];
   rows: WorkstreamRow[];
   cost: CostHypothesis;
   ai: AiDeliveryNote | null;
@@ -76,71 +80,73 @@ export const PROFESSIONAL_DISCLAIMER =
 const AI_REQUESTS = { low: 10, base: 50, high: 200 } as const;
 
 export function deriveCostHypothesis(i: IntentContent): CostHypothesis {
+  const ai = aiState(i) === "yes";
+  const ds = dataState(i);
   const drivers = ["Hosting (monthly plan or usage-based)", "Data storage"];
-  if (i.dataSensitivity !== "none") drivers.push("Backups and secure storage of personal information");
+  if (ds !== "none" && ds !== "assumed_not_sensitive") drivers.push("Backups and secure storage of personal information");
   for (const integ of i.integrations) drivers.push(`Outside service: ${integ.text} (may charge per use or per plan)`);
-  if (i.usesAI) drivers.push("AI model calls (usually charged per token of input and output)");
+  if (ai) drivers.push("AI model calls (usually charged per token of input and output)");
 
   const unknowns = [
     "No provider prices have been checked. All prices are symbols, not numbers.",
     "Hosting provider and plan not chosen.",
   ];
-  let scenarios: CostScenario[];
-  let unit: string;
-  let guardrail: string;
-  let alertThreshold: string;
-  let founderSummary: string;
+  const costRefs = deriveOpenItems(i).decisions.filter((d) => d.decisionNeeded.startsWith("Set the maximum acceptable"));
+  for (const d of costRefs) unknowns.push(`Founder cost limit not set: ${d.decisionNeeded} (OPEN QUESTION)`);
 
-  if (i.usesAI) {
-    unit = "per active user per month";
-    scenarios = (["low", "base", "high"] as const).map((name) => ({
-      name,
-      assumption: `${AI_REQUESTS[name]} AI requests per active user per month`,
-      formula: `AI cost ≈ ${AI_REQUESTS[name]} × (T_in × P_in + T_out × P_out); plus hosting H / active users`,
-    }));
+  if (ai) {
     unknowns.push(
       "T_in / T_out (tokens per request) not measured.",
       "P_in / P_out (price per token) not verified from official provider pricing.",
       i.aiUsageEstimate
         ? `Founder's usage estimate is "${i.aiUsageEstimate}" — an ASSUMPTION until real usage is observed.`
-        : "Founder has not estimated usage yet (OPEN QUESTION).",
+        : "Usage per person not estimated yet (OPEN QUESTION); scenarios below are placeholders.",
     );
-    guardrail = `Cap AI requests per user at the high scenario (${AI_REQUESTS.high}/month) and log tokens per request from day one.`;
-    alertThreshold = "Alert when monthly AI spend exceeds 1.5 × the base scenario, once real prices are verified.";
-    founderSummary =
-      "AI costs money every time it runs, so your running cost grows with use. Nobody knows the real number yet; set a spending limit before inviting users.";
-  } else {
-    unit = "per month for the whole product";
-    scenarios = [
-      { name: "low", assumption: "10 active users", formula: "≈ H (hosting plan) + S (storage); roughly flat" },
-      { name: "base", assumption: "100 active users", formula: "≈ H + S; roughly flat" },
-      { name: "high", assumption: "1,000 active users", formula: "≈ H' (a larger plan) + S × growth" },
-    ];
-    guardrail = "Choose a hosting plan with a fixed monthly cap or a budget limit.";
-    alertThreshold = "Alert at the hosting plan's monthly price + 50%.";
-    founderSummary =
-      "Running costs should be low (hosting and storage only), but this is an assumption — no prices have been checked.";
+    return {
+      state: "ASSUMPTION",
+      unit: "per active user per month",
+      drivers,
+      scenarios: (["low", "base", "high"] as const).map((name) => ({
+        name,
+        assumption: `${AI_REQUESTS[name]} AI requests per active user per month`,
+        formula: `AI cost ≈ ${AI_REQUESTS[name]} × (T_in × P_in + T_out × P_out); plus hosting H / active users`,
+      })),
+      verifiedPrices: [],
+      unknowns,
+      guardrail: costRefs.length
+        ? "Use the founder's maximum acceptable cost (once set) as a hard limit per unit; cap AI requests per user and log tokens per request from day one."
+        : `Cap AI requests per user at the high scenario (${AI_REQUESTS.high}/month) and log tokens per request from day one.`,
+      alertThreshold: "Alert when monthly AI spend exceeds 1.5 × the base scenario, once real prices are verified.",
+      founderSummary:
+        "AI costs money every time it runs, so your running cost grows with use. Nobody knows the real number yet; set a spending limit before inviting users.",
+    };
   }
   return {
     state: "ASSUMPTION",
-    unit,
+    unit: "per month for the whole product",
     drivers,
-    scenarios,
+    scenarios: [
+      { name: "low", assumption: "10 active users", formula: "≈ H (hosting plan) + S (storage); roughly flat" },
+      { name: "base", assumption: "100 active users", formula: "≈ H + S; roughly flat" },
+      { name: "high", assumption: "1,000 active users", formula: "≈ H' (a larger plan) + S × growth" },
+    ],
     verifiedPrices: [],
     unknowns,
-    guardrail,
-    alertThreshold,
-    founderSummary,
+    guardrail: "Choose a hosting plan with a fixed monthly cap or a budget limit.",
+    alertThreshold: "Alert at the hosting plan's monthly price + 50%.",
+    founderSummary:
+      "Running costs should be low (hosting and storage only), but this is an assumption — no prices have been checked.",
   };
 }
 
 function aiNote(i: IntentContent): AiDeliveryNote | null {
-  if (!i.usesAI) return null;
+  if (aiState(i) !== "yes") return null;
+  const ds = dataState(i);
   return {
     aiJobs: [`Help ${i.targetUser} with: ${i.jobToBeDone}`],
     failureBehaviour: i.aiFailureBehaviour ?? "OPEN QUESTION — the founder has not decided what happens when the AI is wrong.",
     dataBoundary:
-      i.dataSensitivity === "none"
+      ds === "none"
         ? "No personal information is expected to be sent to the AI provider (ASSUMPTION)."
         : "Personal information may be sent to an outside AI provider. Confirm the provider's data-use and retention terms before real use.",
     providerPortability: "Keep the AI provider behind one interface so it can be swapped without changing product behaviour.",
@@ -159,10 +165,26 @@ function aiNote(i: IntentContent): AiDeliveryNote | null {
 }
 
 export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
+  const open = deriveOpenItems(i);
+  const candidates = deriveVerificationCandidates(i);
   const steps = i.coreWorkflow.length;
   const acs = i.acceptanceCriteria.length;
   const hasIntegrations = i.integrations.length > 0;
-  const productOpen = i.openQuestions.filter((q) => !["Q-AI-WRONG", "Q-AI-USAGE", "Q-INTEGRATION-DOWN"].includes(q.ref ?? ""));
+  const ai = aiState(i);
+  const ds = dataState(i);
+  const stage = i.stage;
+  const providerActions = open.professional.filter((p) => p.id.startsWith("PA-UR"));
+  const productDecisions = open.decisions.filter((d) => d.id !== "DC-STAGE" && d.id !== "DC-INTEGRATION-DOWN" && d.id !== "DC-AI-WRONG");
+
+  const openActions = [
+    ...open.professional.map((p) => p.question),
+    ...(candidates.length
+      ? [`Refine ${candidates.length} draft verification candidate(s) (${candidates.map((c) => c.id).join(", ")}) into "When …, the system shall …" acceptance criteria with the product owner.`]
+      : []),
+    ...(stage === null ? ["Confirm with the product owner whether this is a demo, a pilot or a real product."] : []),
+    ...(ds === "assumed_not_sensitive" ? ["Confirm what information about people it will hold (currently an assumption)."] : []),
+    ...(ai === "assumed_no" ? ["Confirm the product does not use AI (currently an assumption)."] : []),
+  ];
 
   const rows: WorkstreamRow[] = [];
 
@@ -170,11 +192,11 @@ export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
     id: "product_ux",
     name: "Product and UX",
     founderName: "The experience for your users",
-    status: productOpen.length > 0 ? "OPEN_QUESTION" : "REQUIRED",
-    basis: productOpen.length > 0 ? `${productOpen.length} product question(s) still open.` : "Always required.",
-    whyItMatters: `The ${steps}-step main journey must be easy for ${i.targetUser}.`,
-    nextProfessionalAction: `Turn the ${steps}-step main journey into screen flows and watch 3–5 real ${i.targetUser} try them.`,
-    unknowns: ["No one has tried the journey yet.", ...productOpen.map((q) => q.text)],
+    status: productDecisions.length > 0 ? "OPEN_QUESTION" : "REQUIRED",
+    basis: productDecisions.length > 0 ? `${productDecisions.length} product decision(s) still open.` : "Always required.",
+    whyItMatters: `The ${steps}-step main journey must be easy for the target user.`,
+    nextProfessionalAction: `Turn the ${steps}-step main journey into screen flows and watch 3–5 people from the target group try them.`,
+    unknowns: ["No one has tried the journey yet.", ...productDecisions.map((d) => d.decisionNeeded)],
     founderConsequence: "Nobody has tried the journey yet. Watching a few real people use it is the cheapest way to find problems.",
   });
 
@@ -182,24 +204,26 @@ export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
     id: "architecture",
     name: "Solution architecture",
     founderName: "How it is put together",
-    status: "REQUIRED",
-    basis: `Stage is ${i.stage}.`,
-    whyItMatters: `This is ${STAGE_PLAIN[i.stage]}; the technical setup must match that.`,
+    status: stage === null ? "OPEN_QUESTION" : "REQUIRED",
+    basis: stage === null ? "Stage (demo / pilot / real product) not decided." : `Stage is ${stage}.`,
+    whyItMatters: `This is ${stagePlain(stage)}; the technical setup must match that.`,
     nextProfessionalAction:
-      i.stage === "demo"
+      stage === "demo" || stage === null
         ? "Choose the simplest stack and hosting that can show the main journey; record the choice in an ADR."
         : "Write an ADR covering hosting, data storage, backups, environments and how integrations connect.",
-    unknowns: ["Stack and hosting not chosen."],
+    unknowns: ["Stack and hosting not chosen.", ...(stage === null ? ["Stage not decided."] : [])],
     founderConsequence:
-      i.stage === "demo"
-        ? "Keep the technology simple — this is a demo."
-        : "Real people will use it, so how it is hosted and backed up matters.",
+      stage === null
+        ? "How it should be built depends on whether this is a demo, a pilot or a real product — you have not decided yet."
+        : stage === "demo"
+          ? "Keep the technology simple — this is a demo."
+          : "Real people will use it, so how it is hosted and backed up matters.",
   });
 
   const dataStatus: ReadinessState =
-    hasIntegrations && i.integrationFailureBehaviour === null
+    (hasIntegrations && i.integrationFailureBehaviour === null) || providerActions.length > 0 || ds === "open"
       ? "OPEN_QUESTION"
-      : hasIntegrations || i.dataSensitivity !== "none"
+      : hasIntegrations || ds === "personal" || ds === "sensitive_or_regulated"
         ? "REQUIRED"
         : "ASSUMPTION";
   rows.push({
@@ -209,15 +233,15 @@ export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
     status: dataStatus,
     basis:
       dataStatus === "ASSUMPTION"
-        ? "Founder said no personal information and no connected services; assumed simple data only."
+        ? "No connected services named and no personal information confirmed; assumed simple data only."
         : dataStatus === "OPEN_QUESTION"
-          ? "A connected service is needed but what happens when it is down is undecided."
+          ? "A connected service, its provider, its failure behaviour or the kind of data held is still undecided."
           : "Holds personal information and/or depends on connected services.",
     whyItMatters: hasIntegrations
       ? "The product depends on outside services it does not control."
       : "Even simple data needs a clear home and a way to recover it.",
     nextProfessionalAction: hasIntegrations
-      ? `Confirm access, limits, terms and costs for: ${i.integrations.map((x) => x.text).join("; ")}.`
+      ? `Confirm the provider, access, limits, terms and costs for: ${i.integrations.map((x) => x.text).join("; ")}.`
       : "Define the data the product stores and where it lives.",
     unknowns: hasIntegrations
       ? i.integrations.map((x) => `Whether "${x.text}" offers the access needed (not checked).`)
@@ -227,76 +251,94 @@ export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
       : "It does not depend on outside services, as far as we know.",
   });
 
-  const sensitive = i.dataSensitivity === "sensitive_or_regulated";
+  const sensitive = ds === "sensitive_or_regulated";
+  const secStatus: ReadinessState =
+    ds === "open" ? "OPEN_QUESTION" : ds === "none" || ds === "assumed_not_sensitive" ? "ASSUMPTION" : "REQUIRED";
   rows.push({
     id: "security_privacy",
     name: "Security and privacy",
     founderName: "Keeping people's information safe",
-    status: i.dataSensitivity === "none" ? "ASSUMPTION" : "REQUIRED",
+    status: secStatus,
     basis:
-      i.dataSensitivity === "none"
-        ? "Founder said no personal information; assumed basic security hygiene only."
-        : sensitive
-          ? "Handles sensitive or regulated information."
-          : "Handles basic personal details.",
+      ds === "open"
+        ? "The founder is not sure yet what information it holds."
+        : ds === "assumed_not_sensitive"
+          ? "Not asked: assumed no sensitive or regulated information (ASSUMPTION)."
+          : ds === "none"
+            ? "Founder said no personal information; assumed basic security hygiene only."
+            : sensitive
+              ? "Handles sensitive or regulated information."
+              : "Handles basic personal details.",
     whyItMatters: sensitive
       ? "A leak of sensitive or regulated information can seriously harm people and create legal exposure."
       : "Any product with accounts or personal details can leak them.",
     nextProfessionalAction: sensitive
       ? "A qualified security/privacy reviewer assesses data handling and which regulations apply before any real data is used."
-      : i.dataSensitivity === "personal"
+      : ds === "personal"
         ? "Basic protections: sign-in, access limits, a privacy notice and deletion on request."
-        : "Basic hygiene: dependency updates, no secrets in code, HTTPS.",
-    unknowns: sensitive ? ["Which regulations apply (not assessed)."] : [],
+        : "Confirm what information it holds; until then apply basic hygiene: dependency updates, no secrets in code, HTTPS.",
+    unknowns: sensitive ? ["Which regulations apply (not assessed)."] : ds === "personal" ? [] : ["What information it holds (not confirmed)."],
     founderConsequence: sensitive
       ? "Do not put real people's sensitive information in until a qualified person has reviewed it."
-      : i.dataSensitivity === "personal"
+      : ds === "personal"
         ? "It stores people's personal details, so it needs basic protection and a privacy notice."
-        : "Low risk — as long as it really never collects personal information.",
+        : ds === "open"
+          ? "You are not sure yet what information it will hold, so the right level of protection is unknown."
+          : "Low risk — as long as it really never collects sensitive information.",
   });
 
   rows.push({
     id: "quality_release",
     name: "Quality and release engineering",
     founderName: "Checking it does what you approved",
-    status: "REQUIRED",
-    basis: `${acs} acceptance criteria locked; no evidence yet.`,
-    whyItMatters: "Without evidence per acceptance criterion, \"done\" is just a claim.",
-    nextProfessionalAction: `Automate checks for the ${acs} acceptance criteria and record evidence per criterion.`,
-    unknowns: ["Nothing is built, so there is no evidence yet."],
-    founderConsequence: "You have a checklist (VAT_UAT) to try yourself before anyone calls it done.",
+    status: candidates.length > 0 ? "OPEN_QUESTION" : "REQUIRED",
+    basis: `${acs} locked acceptance criteria; ${candidates.length} draft verification candidate(s) not yet testable; no evidence yet.`,
+    whyItMatters: 'Without precise, testable criteria and evidence per criterion, "done" is just a claim.',
+    nextProfessionalAction: `Refine the ${candidates.length} draft verification candidate(s) with the product owner into testable criteria, then automate checks for all acceptance criteria and record evidence per criterion.`,
+    unknowns: [
+      "Nothing is built, so there is no evidence yet.",
+      ...candidates.map((c) => `${c.id}: ${c.missing.join(", ")} not defined.`),
+    ],
+    founderConsequence:
+      "Some of your checks are not precise enough to test yet. Your builder must make them precise with you before calling anything done.",
   });
 
   rows.push({
     id: "operations",
     name: "Operations and reliability",
     founderName: "Keeping it running",
-    status: i.stage === "demo" ? "NOT_APPLICABLE" : i.stage === "pilot" ? "ASSUMPTION" : "REQUIRED",
+    status: stage === null ? "OPEN_QUESTION" : stage === "demo" ? "NOT_APPLICABLE" : stage === "pilot" ? "ASSUMPTION" : "REQUIRED",
     basis:
-      i.stage === "demo"
-        ? "Demo only: no one relies on it staying up."
-        : i.stage === "pilot"
-          ? "Pilot: assumed basic error logging and a way for pilot users to report problems is enough."
-          : "Real users will rely on it.",
+      stage === null
+        ? "Stage not decided."
+        : stage === "demo"
+          ? "Demo only: no one relies on it staying up."
+          : stage === "pilot"
+            ? "Pilot: assumed basic error logging and a way for pilot users to report problems is enough."
+            : "Real users will rely on it.",
     whyItMatters: "Someone has to notice and fix problems when real people depend on it.",
     nextProfessionalAction:
-      i.stage === "production"
+      stage === "production"
         ? "Define uptime expectations, monitoring, alerts, backups and who responds."
-        : i.stage === "pilot"
+        : stage === "pilot"
           ? "Add error logging and a simple way for pilot users to report problems."
-          : "Revisit if the demo becomes a pilot.",
-    unknowns: i.stage === "demo" ? [] : ["Who responds to problems (not decided)."],
+          : stage === null
+            ? "Decide after the stage is decided."
+            : "Revisit if the demo becomes a pilot.",
+    unknowns: stage === "demo" ? [] : ["Who responds to problems (not decided)."],
     founderConsequence:
-      i.stage === "demo"
-        ? "It is a demo, so it does not need round-the-clock monitoring yet."
-        : i.stage === "pilot"
-          ? "Pilot users need a way to tell you when something breaks."
-          : "People will rely on it — someone must notice and fix outages.",
+      stage === null
+        ? "Whether it needs monitoring depends on whether real people will rely on it — not decided yet."
+        : stage === "demo"
+          ? "It is a demo, so it does not need round-the-clock monitoring yet."
+          : stage === "pilot"
+            ? "Pilot users need a way to tell you when something breaks."
+            : "People will rely on it — someone must notice and fix outages.",
   });
 
   const cost = deriveCostHypothesis(i);
-  const finStatus: ReadinessState =
-    i.usesAI && i.aiUsageEstimate === null ? "OPEN_QUESTION" : i.usesAI || i.stage === "production" ? "REQUIRED" : "ASSUMPTION";
+  const costOpen = cost.unknowns.some((u) => u.includes("(OPEN QUESTION)"));
+  const finStatus: ReadinessState = costOpen ? "OPEN_QUESTION" : ai === "yes" || stage === "production" ? "REQUIRED" : "ASSUMPTION";
   rows.push({
     id: "finops",
     name: "FinOps / cost model",
@@ -304,9 +346,9 @@ export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
     status: finStatus,
     basis:
       finStatus === "ASSUMPTION"
-        ? "No AI and not production: expected low running cost (hosting and storage only) — not measured."
+        ? "No AI confirmed and not production: expected low running cost (hosting and storage only) — not measured."
         : finStatus === "OPEN_QUESTION"
-          ? "Uses AI but usage has not been estimated."
+          ? "A cost limit or usage estimate is still undecided."
           : "Uses AI and/or will run in production; costs need a model and limits.",
     whyItMatters: "Costs that grow with use can surprise you after launch.",
     nextProfessionalAction:
@@ -316,7 +358,7 @@ export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
   });
 
   rows.push(
-    i.usesAI
+    ai === "yes"
       ? {
           id: "ai_aiops",
           name: "AI system design and AIOps/LLMOps",
@@ -331,18 +373,31 @@ export function deriveDeliveryProfile(i: IntentContent): DeliveryProfile {
             ? `AI can be wrong. You decided: ${i.aiFailureBehaviour}`
             : "AI can be wrong, and you have not yet decided what happens then.",
         }
-      : {
-          id: "ai_aiops",
-          name: "AI system design and AIOps/LLMOps",
-          founderName: "How the AI part behaves",
-          status: "NOT_APPLICABLE",
-          basis: "The founder said the product does not use AI.",
-          whyItMatters: "Only relevant if the product uses AI.",
-          nextProfessionalAction: "None unless AI is added through an approved Change Proposal.",
-          unknowns: [],
-          founderConsequence: "No AI in the product, so no AI-specific risk.",
-        },
+      : ai === "open"
+        ? {
+            id: "ai_aiops",
+            name: "AI system design and AIOps/LLMOps",
+            founderName: "How the AI part behaves",
+            status: "OPEN_QUESTION",
+            basis: "The founder is not sure yet whether the product uses AI.",
+            whyItMatters: "If it uses AI, mistakes and running costs need decisions before building.",
+            nextProfessionalAction: "Settle with the product owner whether AI is used before designing that part.",
+            unknowns: ["Whether AI is used."],
+            founderConsequence: "You are not sure yet whether it uses AI. That changes cost and risk, so it needs deciding.",
+          }
+        : {
+            id: "ai_aiops",
+            name: "AI system design and AIOps/LLMOps",
+            founderName: "How the AI part behaves",
+            status: ai === "no" ? "NOT_APPLICABLE" : "ASSUMPTION",
+            basis: ai === "no" ? "The founder said the product does not use AI." : "AI was not mentioned; assumed not used (ASSUMPTION).",
+            whyItMatters: "Only relevant if the product uses AI.",
+            nextProfessionalAction: "None unless AI is added through an approved Change Proposal.",
+            unknowns: [],
+            founderConsequence:
+              ai === "no" ? "No AI in the product, so no AI-specific risk." : "TheDuck assumes there is no AI in the product. Tell us if that is wrong.",
+          },
   );
 
-  return { disclaimer: PROFESSIONAL_DISCLAIMER, rows, cost, ai: aiNote(i) };
+  return { disclaimer: PROFESSIONAL_DISCLAIMER, openActions, rows, cost, ai: aiNote(i) };
 }

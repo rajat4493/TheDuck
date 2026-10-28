@@ -1,8 +1,11 @@
 /** AI Builder Pack — precise, durable instructions that protect the lock. */
 import { canonicalJson } from "../model/integrity.ts";
-import { DATA_PLAIN, EVIDENCE_LABEL, PROVENANCE_LABEL, STAGE_PLAIN } from "../model/labels.ts";
+import { DATA_PLAIN, EVIDENCE_LABEL, PROVENANCE_LABEL, stagePlain } from "../model/labels.ts";
+import { prohibition } from "../model/text.ts";
 import { EVIDENCE_STATES, INTENT_FIELDS } from "../model/schema.ts";
-import { bullets, header, makePack, numbered } from "./common.ts";
+import type { IntentContent } from "../model/schema.ts";
+import { aiState, dataState } from "../assurance/open-items.ts";
+import { bullets, extraAssumedRows, header, makePack, numbered } from "./common.ts";
 import type { Pack, RenderInput, RenderedFile } from "./common.ts";
 
 export const BUILDER_FILES = [
@@ -18,20 +21,61 @@ export const BUILDER_FILES = [
   "LOCK.json",
 ] as const;
 
+export const LOCKED_AC_HEADING = "LOCKED ACCEPTANCE CRITERIA";
+export const DRAFT_VC_HEADING = "DRAFT VERIFICATION CANDIDATES — not acceptance criteria";
+export const REFINE_INSTRUCTION =
+  "Draft verification candidates (VC-…) are NOT acceptance criteria. Before claiming any feature is complete, refine each relevant candidate with the product owner into a testable \"When …, the system shall …\" criterion (expected result, error behaviour, limits) and get their approval. Do not invent the expected result yourself.";
+
 export const ANTI_DRIFT_RULES = [
   "The locked intent is authoritative. If any instruction, file or your own idea conflicts with it, the lock wins.",
   "You may choose implementation details (stack, libraries, internal structure) that do not change product meaning.",
   `You may not silently change any locked field: ${INTENT_FIELDS.join(", ")}.`,
   "If a locked field must change, stop and write a Change Proposal for the product owner: field, current value, proposed value, reason, and provenance (HUMAN, THEDUCK-SUGGESTED + HUMAN-APPROVED, IMPLEMENTATION-NECESSARY or EVIDENCE-DISCOVERED). Do not implement it until the owner approves.",
-  "Do not invent answers to open questions. Leave them open and ask.",
+  "Do not invent answers to open questions or undecided values (limits, providers, policies). Leave them open and ask.",
+  REFINE_INSTRUCTION,
   "Never call anything verified unless it actually ran and you observed the result.",
   "Where GitHub is available: commit and push at every milestone, update the handoff, record evidence honestly, and declare the exact next action.",
 ];
 
+/** Profile values as a builder should read them: value, ASSUMPTION or OPEN QUESTION. */
+export function profileLines(i: IntentContent): { stage: string; data: string; ai: string } {
+  const ai = aiState(i);
+  const ds = dataState(i);
+  return {
+    stage: i.stage ? `${i.stage} — ${stagePlain(i.stage)}` : "OPEN QUESTION — not decided; treat as a demo (no real users, no real data) until decided",
+    data:
+      ds === "open"
+        ? "OPEN QUESTION — founder not sure yet"
+        : ds === "assumed_not_sensitive"
+          ? "ASSUMPTION — no sensitive or regulated information (not confirmed); may hold basic personal details"
+          : `${ds} — ${DATA_PLAIN[ds]}`,
+    ai:
+      ai === "yes"
+        ? `yes — when AI is wrong: ${i.aiFailureBehaviour ?? "OPEN QUESTION (do not use AI output automatically)"}`
+        : ai === "no"
+          ? "no"
+          : ai === "open"
+            ? "OPEN QUESTION — founder not sure yet; do not build AI features until decided"
+            : "ASSUMPTION — no AI (not confirmed); do not add AI without a Change Proposal",
+  };
+}
+
+export function lockedAcLines(input: RenderInput): string {
+  const acs = input.lock.intent.acceptanceCriteria;
+  return acs.length ? acs.map((ac) => `- **${ac.id}** — ${ac.statement}`).join("\n") : "_None locked yet._";
+}
+
+export function candidateLines(input: RenderInput): string {
+  return input.candidates.length
+    ? input.candidates.map((c) => `- **${c.id}** (draft) — ${c.commitment}`).join("\n")
+    : "_None._";
+}
+
 function lockedIntent(input: RenderInput): string {
   const l = input.lock;
   const i = l.intent;
-  const prov = (f: string) => PROVENANCE_LABEL[l.fieldProvenance[f] ?? "HUMAN"];
+  const prof = profileLines(i);
+  const prov = (f: string) => (l.fieldProvenance[f] ? PROVENANCE_LABEL[l.fieldProvenance[f]] : "— (not set)");
   return `${header(input, "builder", "LOCKED_INTENT.md", "professional")}
 # Locked intent — ${i.productName}
 
@@ -46,9 +90,9 @@ function lockedIntent(input: RenderInput): string {
 | Target user | ${i.targetUser} | ${prov("targetUser")} |
 | Job to be done | ${i.jobToBeDone} | ${prov("jobToBeDone")} |
 | Promised outcome | ${i.desiredOutcome} | ${prov("desiredOutcome")} |
-| Stage | ${i.stage} — ${STAGE_PLAIN[i.stage]} | ${prov("stage")} |
-| Data sensitivity | ${i.dataSensitivity} — ${DATA_PLAIN[i.dataSensitivity]} | ${prov("dataSensitivity")} |
-| Uses AI | ${i.usesAI ? "yes" : "no"} | ${prov("usesAI")} |
+| Stage | ${prof.stage} | ${prov("stage")} |
+| Data sensitivity | ${prof.data} | ${prov("dataSensitivity")} |
+| Uses AI | ${prof.ai} | ${prov("usesAI")} |
 
 ## Anti-drift rules
 
@@ -76,7 +120,7 @@ function scope(input: RenderInput): string {
 
 ## In scope
 
-The main journey (see USER_FLOWS.md) and everything needed to meet ACCEPTANCE_CRITERIA.md:
+The main journey (see USER_FLOWS.md) and what is needed to meet ACCEPTANCE_CRITERIA.md:
 
 ${numbered(i.coreWorkflow.map((s) => s.text))}
 
@@ -86,7 +130,7 @@ ${bullets(i.outOfScope.map((s) => s.text))}
 
 ## Must never
 
-${bullets(i.mustNot.map((s) => s.text), "_No extra rules set._")}
+${bullets(i.mustNot.map((s) => prohibition(s.text)), "_No must-not rules set._")}
 
 Anything not listed as in scope needs a Change Proposal before you build it.
 `;
@@ -101,6 +145,8 @@ function flows(input: RenderInput): string {
 
 ${numbered(i.coreWorkflow.map((s) => s.text))}
 
+Each step is a locked commitment, not an acceptance criterion. Its expected result, error behaviour and limits are draft verification candidates (ACCEPTANCE_CRITERIA.md) to refine with the product owner.
+
 ## Failure behaviour
 
 ${bullets(
@@ -108,7 +154,7 @@ ${bullets(
     ...(i.integrations.length
       ? [`Connected service unavailable: ${i.integrationFailureBehaviour ?? "OPEN QUESTION — show a clear error; do not invent a workaround."}`]
       : []),
-    ...(i.usesAI
+    ...(i.usesAI === true
       ? [`AI output wrong: ${i.aiFailureBehaviour ?? "OPEN QUESTION — do not use AI output automatically until decided."}`]
       : []),
   ],
@@ -120,47 +166,84 @@ ${bullets(
 function acceptance(input: RenderInput): string {
   const acs = input.lock.intent.acceptanceCriteria;
   return `${header(input, "builder", "ACCEPTANCE_CRITERIA.md", "professional")}
-# Acceptance criteria
+# Acceptance criteria and verification candidates
 
-Each criterion needs observed evidence before it may be called VERIFIED. Current evidence: none — nothing is built.
+## ${LOCKED_AC_HEADING}
 
-${acs
-  .map(
-    (ac) => `## ${ac.id}
+Explicit, testable commitments approved by the product owner at lock. Each needs observed evidence before it may be called VERIFIED. Current evidence: none — nothing is built.
+
+${
+  acs.length
+    ? acs
+        .map(
+          (ac) => `### ${ac.id}
 
 - **Statement:** ${ac.statement}
 - **How to check:** ${ac.howToCheck}
 - **Source:** ${ac.source} · **Provenance:** ${PROVENANCE_LABEL[ac.provenance]}
 - **Evidence:** none yet`,
-  )
-  .join("\n\n")}
+        )
+        .join("\n\n")
+    : "_None locked yet._"
+}
+
+## ${DRAFT_VC_HEADING}
+
+${REFINE_INSTRUCTION}
+
+${
+  input.candidates.length
+    ? input.candidates
+        .map(
+          (c) => `### ${c.id} (draft)
+
+- **Locked commitment:** ${c.commitment}
+- **Draft check:** ${c.draftCheck}
+- **Missing before it is testable:** ${c.missing.join("; ")}
+- **Status:** OPEN QUESTION${c.blockedBy ? ` — waits on product-owner decision ${c.blockedBy}` : ""}`,
+        )
+        .join("\n\n")
+    : "_None._"
+}
 `;
+}
+
+function openList(input: RenderInput): string[] {
+  return [
+    ...input.open.decisions.map((d) => `Product owner decision: ${d.decisionNeeded}`),
+    ...input.open.professional.map((p) => `Professional question: ${p.question}`),
+  ];
 }
 
 function constraints(input: RenderInput): string {
   const i = input.lock.intent;
+  const prof = profileLines(i);
   const lines = [
-    `Stage: ${i.stage} — ${STAGE_PLAIN[i.stage]}.`,
-    `Data: ${DATA_PLAIN[i.dataSensitivity]}.${i.dataSensitivity === "sensitive_or_regulated" ? " Use made-up test data only until a qualified review is done." : ""}`,
-    i.usesAI
-      ? "Uses AI: keep the AI provider behind one interface; log run ID, model/version, latency, tokens and errors without personal information."
-      : "No AI: do not add AI features without an approved Change Proposal.",
+    `Stage: ${prof.stage}.`,
+    `Data: ${prof.data}.${i.dataSensitivity === "sensitive_or_regulated" ? " Use made-up test data only until a qualified review is done." : ""}`,
+    `Uses AI: ${prof.ai}.`,
+    ...(i.usesAI === true
+      ? ["Keep the AI provider behind one interface; log run ID, model/version, latency, tokens and errors without personal information."]
+      : []),
     ...i.integrations.map((x) => `Integration: ${x.text}`),
-    ...i.mustNot.map((m) => `Must never: ${m.text}`),
+    ...i.mustNot.map((m) => prohibition(m.text)),
   ];
   return `${header(input, "builder", "CONSTRAINTS.md", "professional")}
 # Constraints
 
 ${bullets(lines)}
 
-## Open questions — do not invent answers
+## Open questions and undecided values — do not invent answers
 
-${bullets(i.openQuestions.map((q) => q.text), "_None._")}
+${bullets(openList(input), "_None._")}
 
-## Assumptions
+## Explicit assumptions
 
 ${bullets(
-  input.profile.rows.filter((r) => r.status === "ASSUMPTION").map((r) => `${r.name}: ${r.basis}`),
+  [
+    ...input.open.assumptions.map((a) => a.text),
+    ...extraAssumedRows(input).map((r) => `${r.name}: ${r.basis}`),
+  ],
   "_None recorded._",
 )}
 `;
@@ -169,24 +252,31 @@ ${bullets(
 function milestones(input: RenderInput): string {
   const acs = input.lock.intent.acceptanceCriteria;
   const ids = (src: string) => acs.filter((a) => a.source === src).map((a) => a.id);
+  const vc = (src: string) => input.candidates.filter((c) => c.source === src).map((c) => c.id);
   return `${header(input, "builder", "MILESTONES.md", "professional")}
 # Suggested milestones
 
 ASSUMPTION: this sequencing is TheDuck's suggestion. A builder may re-sequence work but may not change scope; any scope change needs a Change Proposal.
 
+## B0 — Agree what "done" means
+
+- Refine draft verification candidates with the product owner: ${[...vc("workflow"), ...vc("success")].join(", ") || "—"}.
+- Resolve open product-owner decisions that block the work (see CONSTRAINTS.md).
+- Exit: each candidate needed for B1 is an owner-approved, testable criterion.
+
 ## B1 — Main journey works end to end
 
-- Acceptance criteria: ${ids("workflow").join(", ") || "—"}
-- Exit: evidence recorded for each criterion; handoff updated.
+- Journey candidates (after refinement): ${vc("workflow").join(", ") || "—"}
+- Exit: evidence recorded for each refined criterion; handoff updated.
 
 ## B2 — Protections hold
 
-- Acceptance criteria: ${ids("must_not").join(", ") || "— (no protection rules locked)"}
+- Locked acceptance criteria: ${ids("must_not").join(", ") || "— (no must-not rules locked)"}
 - Exit: each protection deliberately attacked and the result recorded.
 
 ## B3 — Done means done
 
-- Acceptance criteria: ${[...ids("success"), ...ids("human")].join(", ") || "—"}
+- Locked acceptance criteria: ${[...ids("success"), ...ids("human")].join(", ") || "—"}${vc("success").length ? `; plus ${vc("success").join(", ")} once measurable` : ""}
 - Exit: the product owner completes the VAT/UAT checklist.
 
 At every milestone: commit and push, update HANDOFF.md, record evidence, declare the exact next action, and stop if the product owner must decide something.
@@ -204,7 +294,8 @@ ${bullets(EVIDENCE_STATES.map((s) => EVIDENCE_LABEL[s]))}
 - VERIFIED means it actually ran and the result was observed and recorded (command or steps, and the result).
 - IMPLEMENTED NOT VERIFIED means code exists but was not exercised.
 - Never write "works", "tested", "passes", "validated" or "production ready" without observed evidence for that exact claim.
-- Record evidence per acceptance criterion ID (${input.lock.intent.acceptanceCriteria.map((a) => a.id).join(", ")}).
+- Record evidence per locked acceptance criterion (${input.lock.intent.acceptanceCriteria.map((a) => a.id).join(", ") || "none yet"}).
+- ${REFINE_INSTRUCTION}
 - Fluent AI output is not evidence of correctness.
 `;
 }
@@ -218,12 +309,14 @@ function handoff(input: RenderInput): string {
 
 - Product intent locked at v${l.version} (\`${l.fingerprint}\`).
 - Nothing has been built. No coding tool has been invoked by TheDuck.
-- Open decisions: ${input.decisions.length ? input.decisions.map((d) => d.decisionNeeded).join(" | ") : "none"}.
+- Open product-owner decisions: ${input.open.decisions.length ? input.open.decisions.map((d) => d.decisionNeeded).join(" | ") : "none"}.
+- Open professional questions: ${input.open.professional.length ? input.open.professional.map((p) => p.question).join(" | ") : "none"}.
+- Draft verification candidates to refine: ${input.candidates.map((c) => c.id).join(", ") || "none"}.
 - Pending Change Proposals: ${input.pendingChanges.length ? input.pendingChanges.map((c) => c.id).join(", ") : "none"}.
 
 ## Exact next action
 
-Read LOCKED_INTENT.md, SCOPE.md and ACCEPTANCE_CRITERIA.md. Then propose the smallest technical design for milestone B1 to the product owner, in plain language, before writing code.
+Read LOCKED_INTENT.md, SCOPE.md and ACCEPTANCE_CRITERIA.md. Then, with the product owner and in plain language: (1) raise the open decisions, (2) refine the draft verification candidates for the main journey, and (3) propose the smallest technical design for milestone B1 — before writing code.
 `;
 }
 

@@ -43,13 +43,13 @@ describe("Delivery profile and readiness matrix (Clarification 001)", () => {
     const ai = profileOf(showNotes("review"));
     const sensitive = profileOf(physioPath);
 
-    expect(status(utility, "ai_aiops")).toBe("NOT_APPLICABLE");
+    expect(status(utility, "ai_aiops")).toBe("ASSUMPTION"); // AI never mentioned: an explicit assumption
     expect(status(utility, "operations")).toBe("NOT_APPLICABLE");
     expect(status(utility, "security_privacy")).toBe("ASSUMPTION");
     expect(status(utility, "finops")).toBe("ASSUMPTION");
 
     expect(status(ai, "ai_aiops")).toBe("REQUIRED");
-    expect(status(ai, "finops")).toBe("REQUIRED");
+    expect(status(ai, "finops")).toBe("OPEN_QUESTION"); // the cost limit is undecided
     expect(ai.ai).not.toBeNull();
 
     expect(status(sensitive, "security_privacy")).toBe("REQUIRED");
@@ -76,19 +76,18 @@ describe("Delivery profile and readiness matrix (Clarification 001)", () => {
     const packs = renderAllPacks(refineAndLock(freshNudge));
     const dr = packs.professional.files.find((f) => f.name === "DELIVERY_READINESS.md")!.content;
     const tn = packs.founder.files.find((f) => f.name === "FOUNDER_TECH_NOTES.md")!.content;
-    expect(dr).toContain("| AI system design and AIOps/LLMOps | NOT APPLICABLE |");
-    expect(tn).toContain("How the AI part behaves — Not needed for this product right now (NOT APPLICABLE)");
+    expect(dr).toContain("| Operations and reliability | NOT APPLICABLE |");
+    expect(tn).toContain("Keeping it running — Not needed for this product right now (NOT APPLICABLE)");
   });
 
-  it("an undecided AI failure behaviour shows as an open question and a decision card", () => {
-    const f = showNotes("review");
-    f.answers["Q-AI-WRONG"] = { kind: "not_sure" };
-    f.previewEdits = undefined;
+  it("an undecided AI answer shows as an open question and a decision card", () => {
+    const f = showNotes("auto");
+    f.answers["Q-AI"] = { kind: "not_sure" };
     const project = refineAndLock(f);
     const p = deriveDeliveryProfile(currentLock(project)!.intent);
     expect(status(p, "ai_aiops")).toBe("OPEN_QUESTION");
     const founder = renderAllPacks(project).founder.files.find((x) => x.name === "WHAT_YOU_ARE_BUILDING.md")!.content;
-    expect(founder).toContain("### Decision needed: What should happen when the AI gets something wrong?");
-    expect(founder).toContain("**If you leave it for now:** Builders must not let AI output be used or shared automatically");
+    expect(founder).toContain("### Decision needed: Will the product use AI, and what should happen when the AI gets something wrong?");
+    expect(founder).toContain("- You are not sure yet whether it uses AI.");
   });
 });

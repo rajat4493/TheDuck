@@ -75,6 +75,8 @@ export const Item = z.object({
   provenance: Provenance,
   /** Optional link, e.g. the question that produced an open question. */
   ref: z.string().optional(),
+  /** For open questions: the draft fields that, once filled, close this question. */
+  fields: z.array(z.string()).optional(),
 });
 export type Item = z.infer<typeof Item>;
 
@@ -85,7 +87,13 @@ export const AcceptanceCriterion = z.object({
   howToCheck: z.string().min(1),
   /** Plain-English instruction for the founder's own test (VAT/UAT). */
   founderCheck: z.string().min(1),
-  source: z.enum(["workflow", "must_not", "success", "human"]),
+  /**
+   * Only explicit, testable commitments become locked acceptance criteria:
+   * must-not rules, measurable success checks, and criteria the owner wrote.
+   * Journey steps are NOT acceptance criteria; they become draft verification
+   * candidates (assurance/verification.ts).
+   */
+  source: z.enum(["must_not", "success", "human"]),
   provenance: Provenance,
 });
 export type AcceptanceCriterion = z.infer<typeof AcceptanceCriterion>;
@@ -118,26 +126,34 @@ export type ListField = (typeof LIST_FIELDS)[number];
 export const INTENT_FIELDS = [...SCALAR_FIELDS, ...LIST_FIELDS, "acceptanceCriteria"] as const;
 export type IntentField = (typeof INTENT_FIELDS)[number];
 
-/** The locked product intent. All required fields must be present to lock. */
-export const IntentContent = z.object({
-  productName: z.string().min(1),
-  targetUser: z.string().min(1),
-  jobToBeDone: z.string().min(1),
-  desiredOutcome: z.string().min(1),
-  stage: Stage,
-  dataSensitivity: DataSensitivity,
-  usesAI: z.boolean(),
-  integrationFailureBehaviour: z.string().min(1).nullable(),
-  aiFailureBehaviour: z.string().min(1).nullable(),
-  aiUsageEstimate: AiUsageEstimate.nullable(),
-  coreWorkflow: z.array(Item).min(1),
-  outOfScope: z.array(Item).min(1),
-  mustNot: z.array(Item),
-  successCriteria: z.array(Item).min(1),
-  integrations: z.array(Item),
-  openQuestions: z.array(Item),
-  acceptanceCriteria: z.array(AcceptanceCriterion).min(1),
-});
+/**
+ * The locked product intent. The five core commitments are required to lock.
+ * Profile fields (stage, data, AI) may be locked as undecided: TheDuck then
+ * shows them as an explicit assumption or an open decision, never a guess.
+ */
+export const IntentContent = z
+  .object({
+    productName: z.string().min(1),
+    targetUser: z.string().min(1),
+    jobToBeDone: z.string().min(1),
+    desiredOutcome: z.string().min(1),
+    stage: Stage.nullable(),
+    dataSensitivity: DataSensitivity.nullable(),
+    usesAI: z.boolean().nullable(),
+    integrationFailureBehaviour: z.string().min(1).nullable(),
+    aiFailureBehaviour: z.string().min(1).nullable(),
+    aiUsageEstimate: AiUsageEstimate.nullable(),
+    coreWorkflow: z.array(Item).min(1),
+    outOfScope: z.array(Item),
+    mustNot: z.array(Item),
+    successCriteria: z.array(Item).min(1),
+    integrations: z.array(Item),
+    openQuestions: z.array(Item),
+    acceptanceCriteria: z.array(AcceptanceCriterion),
+  })
+  .refine((i) => i.outOfScope.length + i.mustNot.length >= 1, {
+    message: "Locked intent needs at least one exclusion or must-not rule.",
+  });
 export type IntentContent = z.infer<typeof IntentContent>;
 
 /** Pre-lock working copy. Same shape, but anything may still be missing. */
@@ -184,12 +200,18 @@ export const Answer = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("text"), value: z.string().trim().min(1) }),
   z.object({ kind: z.literal("list"), values: z.array(z.string().trim().min(1)) }),
   z.object({ kind: z.literal("choice"), value: z.string().min(1) }),
+  /** One question with several labelled boxes; keys are the part keys. */
+  z.object({
+    kind: z.literal("parts"),
+    values: z.record(z.string(), z.union([z.string(), z.array(z.string().trim().min(1))])),
+  }),
   z.object({ kind: z.literal("not_sure") }),
 ]);
 export type Answer = z.infer<typeof Answer>;
 
 export const AskedQuestion = z.object({
   questionId: z.string().min(1),
+  tier: z.enum(["core", "follow_up"]),
   prompt: z.string().min(1),
   answer: Answer,
   fieldsChanged: z.array(z.string()),
